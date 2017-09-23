@@ -52,13 +52,24 @@ public class F10 extends Graph {
         }
 
         //connect middle to core
-        for(int core_type = 0; core_type < K/2; core_type++){
-            for(int incore = 0; incore < K/2; incore++){
-                for(int l = 0; l < K; l++){
-                    addBidirNeighbor(K*K+core_type*K/2+incore, K*K/2+l*K/2+core_type);
+        int coreIndexBase = K*K;
+        int aggIndexBase = K*K/2;
+        for(int pod = 0; pod < K; pod++){
+                for (int aggIndex = 0; aggIndex < K/2; aggIndex++){
+                    if(pod % 2 == 0) {
+                        //Type A
+                        for (int linkIndex = 0; linkIndex < K / 2; linkIndex++)
+                            addBidirNeighbor(aggIndexBase + pod * K / 2 + aggIndex, coreIndexBase + aggIndex * K/2 + linkIndex);
+                    }
+                    else{
+                        //Type B
+                        for (int linkIndex = 0; linkIndex < K / 2; linkIndex++)
+                            addBidirNeighbor(aggIndexBase + pod * K / 2 + aggIndex, coreIndexBase + linkIndex * K/2 + aggIndex);
+                    }
                 }
-            }
         }
+
+
 
         //set weights
         setUpFixWeight(0);
