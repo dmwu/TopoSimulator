@@ -8,7 +8,7 @@ public class F10 extends Graph {
 
     public int K;
 
-    public static F10 createFatTreeByHosts(int hosts){
+    public static F10 createF10ByHosts(int hosts){
         double K_ = Math.pow(hosts*4, 1.0/3.0);
         int K_int = (int)K_;
         if(K_int % 2 != 0){
