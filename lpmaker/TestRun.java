@@ -11,12 +11,12 @@ import lpmaker.graphs.*;
  */
 public class TestRun {
     public static void main(String args[]) throws IOException {
-        for (int i = 0; i <= 5; i++) {
-            FatTreeSigcomm fts = new FatTreeSigcomm(8, i*0.01 );
+        for (int i = 0; i <= 20; i+=5) {
+            FatTreeSigcomm fts = new FatTreeSigcomm(16, i*0.01 );
             fts.PrintGraphforMCFFairCondensed("fattreek8_"+i*0.01+".lp", 1, 0);
-            F10 f10 = new F10(8, i*0.01 );
+            F10 f10 = new F10(16, i*0.01 );
             f10.PrintGraphforMCFFairCondensed("f10k8_"+i*0.01+".lp", 1, 0);
-            AspenTree asp = new AspenTree(8, 4, 4, i*0.01 );
+            AspenTree asp = new AspenTree(16, 4, 8, i*0.01 );
             asp.PrintGraphforMCFFairCondensed("aspenk8_"+i*0.01+".lp", 1, 0);
         }
     }

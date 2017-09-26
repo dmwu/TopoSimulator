@@ -1462,10 +1462,12 @@ public class Graph
 			else if (trafficmode == 16) rndmap = TrafficGenLocalManyToMany(para);
 			else rndmap = TrafficGenStride(para);
 
+			//[wdm-09-26] output could be enourmous suppress it for now
+			/*
 			for (int i = 0; i < rndmap.size(); i++) {
 				TrafficPair curnt = rndmap.get(i);
 				System.out.println("FLOW " + curnt.from + "-->" + curnt.to);
-			}
+			}*/
 			
 			FileWriter fstream = new FileWriter(filename);
 			BufferedWriter out = new BufferedWriter(fstream);
@@ -1831,10 +1833,12 @@ public class Graph
 			else if (trafficmode == 16) rndmap = TrafficGenLocalManyToMany(para);
 			else rndmap = TrafficGenStride(para);
 
+			/* [wdm-09-26]The output could be enormous, suppress it for now*/
+			/*
 			for (int i = 0; i < rndmap.size(); i++) {
 				TrafficPair curnt = rndmap.get(i);
 				System.out.println("FLOW " + curnt.from + "-->" + curnt.to);
-			}
+			}*/
 			
 			FileWriter fstream = new FileWriter(filename);
 			BufferedWriter out = new BufferedWriter(fstream);
@@ -2198,10 +2202,12 @@ public class Graph
 			else if (trafficmode == 2) rndmap = TrafficGenAllToOne();
 			else rndmap = TrafficGenStride(trafficmode);
 
+			//[wdm-09-26] output could be enormous
+			/*
 			for (int i = 0; i < rndmap.size(); i++) {
 				TrafficPair curnt = rndmap.get(i);
 				System.out.println("FLOW " + curnt.from + "-->" + curnt.to);
-			}
+			}*/
 			
 			FileWriter fstream = new FileWriter(filename);
 			BufferedWriter out = new BufferedWriter(fstream);
