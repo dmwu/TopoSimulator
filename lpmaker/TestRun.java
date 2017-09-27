@@ -11,7 +11,7 @@ import lpmaker.graphs.*;
  */
 public class TestRun {
     public static void main(String args[]) throws IOException {
-        for (int i = 0; i <= 20; i+=10) {
+        for (int i = 0; i <= 20; i+=5) {
             FatTreeSigcomm fts = new FatTreeSigcomm(16, i*0.01 );
             fts.PrintGraphforMCFFairCondensed("fattreek_"+i*0.01+".lp", 1, 0);
             F10 f10 = new F10(16, i*0.01 );
