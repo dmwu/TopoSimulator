@@ -1673,7 +1673,7 @@ public class Graph
 						//constraint = "";
 					}
 				}
-				if(i > 0 && i % 20 == 0)
+				if(i > 0 && i % 50 == 0)
 					System.out.println(new Date() + ": "+i+" of "+noNodes+" done");
 			}
 			//>
@@ -1750,7 +1750,7 @@ public class Graph
 						fid++;
 					}
 				}
-				if(f > 0 && f % 20 == 0)
+				if(f > 0 && f % 50 == 0)
 					System.out.println(new Date() + ": "+f+" of "+noNodes+" done");
 			}
 
@@ -2054,7 +2054,7 @@ public class Graph
 						//constraint = "";
 					}
 				}
-				if(i > 0 && i % 20 == 0)
+				if(i > 0 && i % 50 == 0)
 					System.out.println(new Date() + ": "+i+" of "+noNodes+" done");
 			}
 			//>
