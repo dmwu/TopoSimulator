@@ -3,7 +3,7 @@
 for entry in ./*.lp
 do
   echo "$entry"
-  gurobi_cl Threads=10 Crossover=0 ResultFile=$entry'.sol' $entry | tee $entry".out"
+  gurobi_cl Threads=10 Crossover=0 ResultFile=$entry'.sol' $entry
 done
 
 for entry in ./*.sol

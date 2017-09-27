@@ -2133,7 +2133,7 @@ public class Graph
 						fid++;
 					}
 				}
-				if(f > 0 && f % 20 == 0)
+				if(f > 0 && f % 50 == 0)
 					System.out.println(new Date() + ": "+f+" of "+noNodes+" done");
 			}
 
