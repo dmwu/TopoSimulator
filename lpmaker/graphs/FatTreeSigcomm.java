@@ -38,6 +38,17 @@ public class FatTreeSigcomm extends Graph{
 		failLinks(fail_rate);
 	}
 
+	public FatTreeSigcomm(int K_, int failLinkCount){
+		super(K_*K_*5/4);
+		this.K = K_;
+		System.out.println(K_ + " ^^^^^^^^^^^^^^^^^^^^ ");
+		populateAdjacencyList();
+		name = "fat";
+		int totalLinks = K*K*K/2;
+		double failRate = failLinkCount/(double)totalLinks;
+		failLinks(failRate);
+	}
+
 	/*public ArrayList TrafficGenAllAll()
 	{
 

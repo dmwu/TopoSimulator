@@ -30,6 +30,19 @@ public class AspenTree extends Graph{
             failLinks(fail_rate);
         }
 
+        public AspenTree(int K_, int n_, int d_, int failedLinkCount){
+            super((int) ( K_ * K_ / 2 * (n_- 0.5) ) );
+            this.K = K_;
+            this.N = n_;
+            this.D = d_;
+            this.S = (int) (Math.pow(K, N-1)/(Math.pow(2, N-2) * D)); //S must be K*K/2
+            populateAdjacencyList();
+
+            int totalLinks = 3*K*K*K/4;
+            double failRate = failedLinkCount/(double) totalLinks;
+            failLinks(failRate);
+
+        }
 
         // +++++++++++ THIS CONSTRUCTION ROUTINE FOR VANILLA FAT TREE +++++++++++++++++++++++++++++++
         private void populateAdjacencyList(){
@@ -71,7 +84,6 @@ public class AspenTree extends Graph{
                         addBidirNeighbor(coreIndexBase + coreType * K / 2 + incore, redIndexBase + incore + K / 2 * coreLink);
                     }
             }
-
 
             //set weights
             setUpFixWeight(0);

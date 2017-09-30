@@ -727,7 +727,6 @@ public class Graph
 			totalEdges /= 2;
 			int linkToFail = rand.nextInt(totalEdges);
 
-			//if (!failedLinks.contains((Integer) linkToFail)) {
 			failedLinks.clear();
 			failedLinks.add((Integer) linkToFail);
 			failed_until_now ++;
@@ -1753,43 +1752,6 @@ public class Graph
 				if(f > 0 && f % 50 == 0)
 					System.out.println(new Date() + ": "+f+" of "+noNodes+" done");
 			}
-
-			/*System.out.println(new Date() + ": Starting part 3");
-			out.write("\n\\Type 3: Flow >= 0\n");
-
-			fid = 0;
-			for (int f = 0; f < noNodes; f++)
-			{
-				for (int t = 0; t < noNodes; t++)
-				{
-					if(switchLevelMatrix[f][t]>0)	  //for each flow fid with source f
-					{
-						//constraint = "c0_" + fid + ": ";
-						//System.out.println("CHECK FLOW =========== " + fid + " " + f + " " + t);
-
-						//int writeCons = 0;
-						for(int j=0; j<adjacencyList[f].size(); j++)   //for each out link of f = (f,j)
-						{
-							if (!isFlowZero(allFlowIDs[fid], f, adjacencyList[f].elementAt(j).intValue()))
-							{
-								constraint = "c3_" + fid + "_" + f + "_" + adjacencyList[f].elementAt(j).intValue() + ": ";
-								constraint += "f_" + fid + "_" + f + "_" + adjacencyList[f].elementAt(j).intValue() + " ";
-								constraint += ">= 0\n";
-								out.write(constraint);
-								//writeCons = 1;
-							}
-							//if(j!=adjacencyList[f].size()-1) constraint += "- ";
-						}
-						fid++;
-					}
-				}
-			}
-
-			System.out.println(new Date() + ": Starting part 4");
-			out.write("\n\\Type 4: K >= 0\n");
-
-			constraint = "c4: K >= 0\n";
-			out.write(constraint);*/
 			
 			out.write("End\n");
 			out.close();
@@ -1892,12 +1854,6 @@ public class Graph
 				for (int t = 0; t < noNodes; t++)
 					if(switchLevelMatrix[f][t]>0)
 						numFlows++;
-
-			String file_index = filename.substring(3); 
-			file_index = file_index.substring(0, file_index.length() - 4);
-
-			System.out.println(file_index + " ***************************** ");
-
 			FlowID[] allFlowIDs = new FlowID[numFlows];
 			int curfID=0;
 			//Writer output1 = new BufferedWriter(new FileWriter("flowIDmap" + file_index));
@@ -1925,8 +1881,8 @@ public class Graph
 				}
 			//output2.close();
 
-			//boolean fair = false;
-			boolean fair = true;
+			boolean fair = false;
+			//boolean fair = true;
 			int fid=0;
 			String constraint = "";
 			if (fair) {
@@ -1934,23 +1890,7 @@ public class Graph
 				out.write("Maximize \n");
 				out.write("obj: ");
 				String objective = "K";
-
-				// To make CPLEX not fill pipes as freely as it does while keeping the optimal value same
-				// Simple idea: For each utilization of capacity, subtract a tiny amount from the objective. 
-				// This forces CPLEX to keep the main 'K' part as large as possible, while avoiding wastage of capacity
-				/*for (int f = 0; f < noNodes; f++)
-				  for (int j=0; j<adjacencyList[f].size(); j++) {  //for each out link of f = (f,j)
-				  for (int fid = 0; fid < numFlows; fid ++) {
-				  if (!isFlowZero(allFlowIDs[fid], f, adjacencyList[f].elementAt(j).intValue())) {
-				  double normalized_factor = 0.00000001 / adjacencyList[f].elementAt(j).linkcapacity;
-				  objective += " -" + (new BigDecimal(Double.toString(normalized_factor))).toPlainString() + "f_" + fid + "_" + f + "_" + adjacencyList[f].elementAt(j).intValue(); 
-				  }
-				  }
-				  }*/
-
 				out.write(objective);
-
-
 				//<Constraints of Type 0: fairness i.e. flow >= K
 				out.write("\n\nSUBJECT TO \n");
 
@@ -2137,43 +2077,7 @@ public class Graph
 					System.out.println(new Date() + ": "+f+" of "+noNodes+" done");
 			}
 
-			/*System.out.println(new Date() + ": Starting part 3");
-			out.write("\n\\Type 3: Flow >= 0\n");
 
-			fid = 0;
-			for (int f = 0; f < noNodes; f++)
-			{
-				for (int t = 0; t < noNodes; t++)
-				{
-					if(switchLevelMatrix[f][t]>0)	  //for each flow fid with source f
-					{
-						//constraint = "c0_" + fid + ": ";
-						//System.out.println("CHECK FLOW =========== " + fid + " " + f + " " + t);
-
-						//int writeCons = 0;
-						for(int j=0; j<adjacencyList[f].size(); j++)   //for each out link of f = (f,j)
-						{
-							if (!isFlowZero(allFlowIDs[fid], f, adjacencyList[f].elementAt(j).intValue()))
-							{
-								constraint = "c3_" + fid + "_" + f + "_" + adjacencyList[f].elementAt(j).intValue() + ": ";
-								constraint += "f_" + fid + "_" + f + "_" + adjacencyList[f].elementAt(j).intValue() + " ";
-								constraint += ">= 0\n";
-								out.write(constraint);
-								//writeCons = 1;
-							}
-							//if(j!=adjacencyList[f].size()-1) constraint += "- ";
-						}
-						fid++;
-					}
-				}
-			}
-
-			System.out.println(new Date() + ": Starting part 4");
-			out.write("\n\\Type 4: K >= 0\n");
-
-			constraint = "c4: K >= 0\n";
-			out.write(constraint);*/
-			
 			out.write("End\n");
 			out.close();
 		}
