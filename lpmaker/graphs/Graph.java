@@ -1678,7 +1678,7 @@ public class Graph
 			//>
 
 			//<Constraints of Type 2: Flow conservation at non-source, non-destination
-			int LARGE_VALUE = 1;		// TOPO_COMPARISON
+			int LARGE_VALUE = 20;		// TOPO_COMPARISON
 			System.out.println(new Date() + ": Starting part 2");
 			out.write("\n\\Type 2: Flow conservation at non-source, non-destination\n");
 			fid=0;
@@ -2002,7 +2002,7 @@ public class Graph
 			//<Constraints of Type 2: Flow conservation at non-source, non-destination
 
 			//[wdm09-22 should be a large value (e.g., >20) to saturate the network]
-			int LARGE_VALUE = 1;		// TOPO_COMPARISON
+			int LARGE_VALUE = 20;		// TOPO_COMPARISON
 			System.out.println(new Date() + ": Starting part 2");
 			out.write("\n\\Type 2: Flow conservation at non-source, non-destination\n");
 			fid=0;
