@@ -1,9 +1,12 @@
 #!/bin/bash
 
+javac lpmaker/TestRun.java
+java lpmaker.TestRun
+
 for entry in ./*.lp
 do
   echo "$entry"
-  gurobi_cl Threads=10 Crossover=0 ResultFile=$entry'.sol' $entry
+  gurobi_cl Threads=10 Method=2 Crossover=0 ResultFile=$entry'.sol' $entry
 done
 
 for entry in ./*.sol
