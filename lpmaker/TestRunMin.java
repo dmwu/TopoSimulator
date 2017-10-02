@@ -9,10 +9,10 @@ import lpmaker.graphs.*;
  * Created by wdm on 9/22/17.
  * For aspen trees:   (k,n,d,S) ={(8, 4, 4, 32), (16, 4, 8, 128), (24, 4, 12, 288), (32, 4, 16, 512)}
  */
-public class TestRun {
+public class TestRunMin {
     public static void main(String args[]) throws IOException {
-
-        for (int i = 0; i <= 20; i+=5) {
+        int[] myIntArray = {0,5,10,20};
+        for (int i: myIntArray) {
             for (int j = 0; j< 4; j++) {
                 FatTreeSigcomm fts = new FatTreeSigcomm(16, i);
                 fts.PrintGraphforMCFFairCondensed("fattree16_" + i +"_"+j+".lp", 1, 0);

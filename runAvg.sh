@@ -1,7 +1,7 @@
 #!/bin/bash
 
-javac lpmaker/TestRun.java
-java lpmaker.TestRun
+javac lpmaker/TestRunAvg.java
+java lpmaker.TestRunAvg
 
 for entry in ./*.lp
 do
@@ -13,5 +13,6 @@ for entry in ./*.sol
 do
   echo "$entry"
   line=$(head -n 1 $entry)
-  echo -e "$entry $line" >> "final.sol"
+  echo -e "$entry $line" >> "finalAvg.sol"
 done
+rm ./*.lp
