@@ -11,7 +11,7 @@ import java.io.IOException;
  */
 public class TestRunAvg {
     public static void main(String args[]) throws IOException {
-        int[] myIntArray = {0,5,10,20};
+        int[] myIntArray = {0, 10, 20, 30};
         for (int i : myIntArray) {
             for (int j = 0; j< 5; j++) {
                 FatTreeSigcomm fts = new FatTreeSigcomm(16, i);
