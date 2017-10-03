@@ -13,7 +13,7 @@ public class TestRunMin {
     public static void main(String args[]) throws IOException {
         int[] myIntArray = {0, 10, 20, 30};
         for (int i: myIntArray) {
-            for (int j = 0; j< 4; j++) {
+            for (int j = 0; j< 6; j++) {
                 FatTreeSigcomm fts = new FatTreeSigcomm(16, i);
                 fts.PrintGraphforMCFFairCondensed("fattree16_" + i +"_"+j+".lp", 1, 0);
                 F10 f10 = new F10(16, i);
