@@ -13,6 +13,7 @@ for entry in ./*.sol
 do
   echo "$entry"
   line=$(head -n 1 $entry)
-  echo -e "$entry $line" >> "finalMin.sol"
+  echo -e "$entry $line" >> "finalMinFine.sol"
 done
 rm ./*.lp
+rm ./*.lp.sol

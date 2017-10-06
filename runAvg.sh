@@ -13,6 +13,7 @@ for entry in ./*.sol
 do
   echo "$entry"
   line=$(head -n 1 $entry)
-  echo -e "$entry $line" >> "finalAvg.sol"
+  echo -e "$entry $line" >> "finalAvgFine.sol"
 done
 rm ./*.lp
+rm ./*.lp.sol

@@ -11,7 +11,7 @@ import lpmaker.graphs.*;
  */
 public class TestRunMin {
     public static void main(String args[]) throws IOException {
-        int[] myIntArray = {0, 10, 20, 30};
+        int[] myIntArray = {0, 1, 2, 3, 4, 5};
         for (int i: myIntArray) {
             for (int j = 0; j< 6; j++) {
                 FatTreeSigcomm fts = new FatTreeSigcomm(16, i);
