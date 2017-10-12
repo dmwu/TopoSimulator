@@ -20,7 +20,7 @@ for topo in 1 2 3
             do
             echo "$entry"
             line=$(head -n 1 $entry)
-            echo -e "$entry $line" >> "finalAvgFine.sol"
+            echo -e "$entry $line" >> "finalMin.txt"
             done
             rm ./*.lp
             rm ./*.lp.sol
