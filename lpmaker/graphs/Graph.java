@@ -1021,7 +1021,6 @@ public class Graph
 			for (int j = 0; j < curntCluster.size(); j++) {
 				System.out.print(curntCluster.get(j) + " ");
 			}
-			//System.out.println("\n****************************");
 
 			for (int j = 0; j < n; j++) {
 				for (int t = 0; t < n; t++) {
@@ -1029,11 +1028,6 @@ public class Graph
 				}
 			}
 		}
-
-		/*for (int j = 0; j < potentialHost.size(); j++) {
-			System.out.print(potentialHost.get(j) + " ");
-		}
-		System.out.println("\n****************************");*/
 
 		for (int j = 0; j < potentialHost.size(); j++) {
 			for (int t = 0; t < potentialHost.size(); t++) {
@@ -1097,17 +1091,6 @@ public class Graph
 			}
 		}
 
-		/*for (int j = 0; j < potentialHost.size(); j++) {
-			System.out.print(potentialHost.get(j) + " ");
-		}
-		System.out.println("\n****************************");*/
-
-		/*for (int j = 0; j < potentialHost.size(); j++) {
-			for (int t = 0; t < potentialHost.size(); t++) {
-				ls.add(new TrafficPair(potentialHost.get(j), potentialHost.get(t)));
-			}
-		}*/
-
 		return ls;
 	}
 
@@ -1128,11 +1111,6 @@ public class Graph
 				remainingHosts.remove(randIndex);
 			}
 
-			/*for (int j = 0; j < curntCluster.size(); j++) {
-				System.out.print(curntCluster.get(j) + " ");
-			}
-			System.out.println("****************************");*/
-
 			for (int j = 0; j < n; j++) {
 				for (int t = 0; t < n; t++) {
 					ls.add(new TrafficPair(curntCluster.get(j), curntCluster.get(t)));
@@ -1140,10 +1118,6 @@ public class Graph
 			}
 		}
 
-		/*for (int j = 0; j < remainingHosts.size(); j++) {
-				System.out.print(remainingHosts.get(j) + " ");
-			}
-		System.out.println("****************************");*/
 
 		for (int j = 0; j < remainingHosts.size(); j++) {
 			for (int t = 0; t < remainingHosts.size(); t++) {
@@ -1171,24 +1145,12 @@ public class Graph
 				remainingHosts.remove(randIndex);
 			}
 
-			/*for (int j = 0; j < curntCluster.size(); j++) {
-				System.out.print(curntCluster.get(j) + " ");
-			}
-			System.out.println("****************************");*/
-
-			//System.out.println("****************************");
 			int targetIndex = rand.nextInt(n);
 			for (int j = 0; j < n; j++) {
 				ls.add(new TrafficPair(curntCluster.get(j), curntCluster.get(targetIndex)));
 				//System.out.println(curntCluster.get(j) + " --> " + curntCluster.get(targetIndex));
 			}
 		}
-
-		/*for (int j = 0; j < remainingHosts.size(); j++) {
-				System.out.print(remainingHosts.get(j) + " ");
-			}
-		System.out.println("****************************");*/
-		//System.out.println("****************************");
 
 		if (!remainingHosts.isEmpty()) {
 			int targetIndex = rand.nextInt(remainingHosts.size());
@@ -1499,10 +1461,7 @@ public class Graph
 					if(switchLevelMatrix[f][t]>0)
 						numFlows++;
 
-			String file_index = filename.substring(3); 
-			file_index = file_index.substring(0, file_index.length() - 4);
-
-			System.out.println(file_index + " ***************************** ");
+			System.out.println(filename + " ***************************** ");
 
 			FlowID[] allFlowIDs = new FlowID[numFlows];
 			int curfID=0;
@@ -1783,6 +1742,7 @@ public class Graph
 			FileWriter fstream = new FileWriter(filename);
 			BufferedWriter out = new BufferedWriter(fstream);
 
+			System.out.println(filename + " ***************************** ");
 			// Nodes
 			int numEdges = 0;
 			for(int i=0; i<noNodes; i++)
@@ -1802,8 +1762,8 @@ public class Graph
 				}
 			}
 
-			System.out.println("Number of edges " + edgeID);
-			System.out.println("Map size " + rndmap.size());
+			System.out.println("Number of links " + edgeID/2);
+
 
 			for (int i = 0; i < rndmap.size(); i++) {
 				int from = rndmap.get(i).from;
@@ -1834,7 +1794,6 @@ public class Graph
 						numFlows++;
 			FlowID[] allFlowIDs = new FlowID[numFlows];
 			int curfID=0;
-			//Writer output1 = new BufferedWriter(new FileWriter("flowIDmap" + file_index));
 			
 			for (int f = 0; f < noNodes; f++)
 				for (int t = 0; t < noNodes; t++)
@@ -1844,9 +1803,6 @@ public class Graph
 						//output1.write(curfID + " " + f + " " + t + "\n");
 						curfID++;
 					}
-			//output1.close();
-
-			//Writer output2 = new BufferedWriter(new FileWriter("linkCaps" + file_index));
 			
 			for (int f = 0; f < noNodes; f++)
 				for (int j=0; j<adjacencyList[f].size(); j++) {  //for each out link of f = (f,j)

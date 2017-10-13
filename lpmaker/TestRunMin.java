@@ -14,7 +14,7 @@ import lpmaker.graphs.*;
  */
 public class TestRunMin {
     public static void main(String args[]) throws IOException {
-        int k = 4;
+        int k = 24;
         int topo = Integer.parseInt(args[0]);
         int failurePos = Integer.parseInt(args[1]);
         int failCount = Integer.parseInt(args[2]);

@@ -32,7 +32,6 @@ public class FatTreeSigcomm extends Graph{
 	public FatTreeSigcomm(int K_,  int failurePositons, double fail_rate){
 		super(K_*K_*5/4);
 		this.K = K_;
-		System.out.println(K_ + " ^^^^^^^^^^^^^^^^^^^^ ");
 		populateAdjacencyList();
 		name = "fat";
 		failLinks(fail_rate, K_, failurePositons);
@@ -41,7 +40,6 @@ public class FatTreeSigcomm extends Graph{
 	public FatTreeSigcomm(int K_, int failurePositions, int failLinkCount){
 		super(K_*K_*5/4);
 		this.K = K_;
-		System.out.println(K_ + " ^^^^^^^^^^^^^^^^^^^^ ");
 		populateAdjacencyList();
 		name = "fat";
 		int totalLinks = K*K*K/2;

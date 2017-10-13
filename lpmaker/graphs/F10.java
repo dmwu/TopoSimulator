@@ -27,7 +27,6 @@ public class F10 extends Graph {
     public F10(int K_, int failurePosition, double fail_rate){
         super(K_*K_*5/4);
         this.K = K_;
-        System.out.println(K_ + " ^^^^^^^^^^^^^^^^^^^^ ");
         populateAdjacencyList();
         name = "F10";
         failLinks(fail_rate,K_, failurePosition);
@@ -36,7 +35,6 @@ public class F10 extends Graph {
     public F10(int K_, int failurePosition, int failLinkCount){
         super(K_*K_*5/4);
         this.K = K_;
-        System.out.println(K_ + " ^^^^^^^^^^^^^^^^^^^^ ");
         populateAdjacencyList();
         name = "F10";
         int totalLinks = K*K*K/2;
