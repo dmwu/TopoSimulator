@@ -14,7 +14,7 @@ import lpmaker.graphs.*;
  */
 public class TestRunMin {
     public static void main(String args[]) throws IOException {
-        int k = 24;
+        int k = 16;
         int topo = Integer.parseInt(args[0]);
         int failurePos = Integer.parseInt(args[1]);
         int failCount = Integer.parseInt(args[2]);
@@ -27,7 +27,7 @@ public class TestRunMin {
             F10 f10 = new F10(k, failurePos, failCount);
             f10.PrintGraphforMCFFairCondensed("ften_min_k" + k + "_linkType"+failurePos+"_failureCount"+failCount + "_" + trial + ".lp", 1, 0);
         }else{
-            AspenTree asp = new AspenTree(k, 4, 12, failurePos,failCount);
+            AspenTree asp = new AspenTree(k, 4, 8, failurePos,failCount);
             asp.PrintGraphforMCFFairCondensed("aspen_min_k" + k + "_linkType"+failurePos+"_failureCount"+failCount + "_" + trial + ".lp", 1, 0);
         }
 

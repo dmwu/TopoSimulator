@@ -1475,9 +1475,6 @@ public class Graph
 						//output1.write(curfID + " " + f + " " + t + "\n");
 						curfID++;
 					}
-			//output1.close();
-
-			//Writer output2 = new BufferedWriter(new FileWriter("linkCaps" + file_index));
 			
 			for (int f = 0; f < noNodes; f++)
 				for (int j=0; j<adjacencyList[f].size(); j++) {  //for each out link of f = (f,j)
@@ -1488,9 +1485,6 @@ public class Graph
 				
 					//output2.write(f + "_" + adjacencyList[f].elementAt(j).intValue() + " " + adjacencyList[f].elementAt(j).linkcapacity + " " + adjacencyList[f].size() + " " + lType + "\n");
 				}
-			//output2.close();
-
-			//boolean fair = false;
 			boolean fair = true;
 			int fid=0;
 			String constraint = "";
@@ -1575,7 +1569,7 @@ public class Graph
                 }
                 out.write(objective);
 				out.write("\n\nSUBJECT TO \n\\Type 0: Flow >= K\n");
-	                        //>
+				System.out.println(new Date() + ": Starting part 0");
 			}
 
 			//<Constraints of Type 1: Load on link <= max_load
