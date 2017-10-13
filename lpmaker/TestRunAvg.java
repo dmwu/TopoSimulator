@@ -21,13 +21,13 @@ public class TestRunAvg {
         System.out.println("Topo:"+topo+" position:" +failurePos+" failCount:"+failCount+ " trial:"+trial);
         if(topo == 1) {
             FatTreeSigcomm fts = new FatTreeSigcomm(k, failurePos,failCount);
-            fts.PrintGraphforMCFFairCondensedAverage("fattree_k" + k + "_linkType"+failurePos+"_failureCount"+failCount + "_" + trial + ".lp", 1, 0);
+            fts.PrintGraphforMCFFairCondensedAverage("fattree_avg_k" + k + "_linkType"+failurePos+"_failureCount"+failCount + "_" + trial + ".lp", 1, 0);
         }else if(topo == 2){
             F10 f10 = new F10(k, failurePos, failCount);
-            f10.PrintGraphforMCFFairCondensedAverage("ften_k" + k + "_linkType"+failurePos+"_failureCount"+failCount + "_" + trial + ".lp", 1, 0);
+            f10.PrintGraphforMCFFairCondensedAverage("ften_avg_k" + k + "_linkType"+failurePos+"_failureCount"+failCount + "_" + trial + ".lp", 1, 0);
         }else{
                 AspenTree asp = new AspenTree(k, 4, 12, failurePos, failCount);
-                asp.PrintGraphforMCFFairCondensedAverage("aspen_k" + k + "_linkType"+failurePos+"_failureCount"+failCount + "_" + trial + ".lp", 1, 0);
+                asp.PrintGraphforMCFFairCondensedAverage("aspen_avg_k" + k + "_linkType"+failurePos+"_failureCount"+failCount + "_" + trial + ".lp", 1, 0);
             }
 
         }
