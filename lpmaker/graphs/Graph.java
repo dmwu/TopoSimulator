@@ -700,9 +700,10 @@ public class Graph
 		adjacencyList[j].add(new Link(i));
 	}
 
-	public void failLinks(double percentage)
+	//modified by wdm 10/12/2017
+	public void failLinks(double percentage, int Clos_K, int pos)
 	{
-		// First find the total number of edges
+		//pos meaning:  1-> edge2agg links;  2->core links
 		int totalEdges = 0;
 		for (int i =0; i < noNodes; i++)
 		{
@@ -710,66 +711,44 @@ public class Graph
 		}
 		totalEdges /= 2;
 
-		int numFail = (int) (percentage * totalEdges);
-		System.out.println("TO-FAIL LINKS NUM = " +  numFail);
+		int failCount = (int) (totalEdges*percentage);
 
-		int failed_until_now = 0;
+		int linksPerLayer = Clos_K*Clos_K*Clos_K/4;
+		int range, linkStartIndex;
+		Set<Integer> candiates = new HashSet<>();
+		if (pos == 0) {
+			//don't care
+			linkStartIndex = 0;
+			range = totalEdges;
+		}else if(pos == 1) {
+			//edge2agg links
+			linkStartIndex = 0;
+			range = linksPerLayer;
+		}else{
+			//core links
+			linkStartIndex = totalEdges - linksPerLayer;
+			range = linksPerLayer;
+		}
 
-		Vector<Integer> failedLinks = new Vector<Integer>();
-
-		while (failed_until_now < numFail)
-		{
-			totalEdges = 0;
-			for (int i =0; i < noNodes; i++)
-			{
-				totalEdges += adjacencyList[i].size();
-			}
-			totalEdges /= 2;
-			int linkToFail = rand.nextInt(totalEdges);
-
-			failedLinks.clear();
-			failedLinks.add((Integer) linkToFail);
-			failed_until_now ++;
-
-			//Fail the link linkToFail
-			LinkedList<Link> ll = new LinkedList<Link>();
-
-			// Now we've decided which links have failed. Unplug them!
-			int index_read = 0;
-			int counter = 0;
-			for (int i = 0; i < noNodes; i++)
-			{
-				Iterator<Link> my_iter = adjacencyList[i].iterator();
-				while(my_iter.hasNext())
-				{
-					Link curr = my_iter.next();
-					if (failedLinks.contains((Integer) index_read))
-					{
-						counter++ ;
-						//my_iter.remove();
-						ll.add(curr);
-						for (Link reverseLink : adjacencyList[curr.linkTo])
-							if (reverseLink.linkTo == i)
-							{
-								//adjacencyList[curr.linkTo].remove(reverseLink);
-								counter++;
-								ll.add(reverseLink);
-								break;
-							}
-					}
-					index_read ++;
+		while(candiates.size() < failCount){
+			int cand = rand.nextInt(range) + linkStartIndex;
+			candiates.add(cand);
+		}
+		for (int cand: candiates){
+			int fromSwitch = cand / (Clos_K/2);
+			int linkOffset = cand % (Clos_K/2);
+			Vector<Integer> connectivity = new Vector<>();
+			for(Link to: adjacencyList[fromSwitch]){
+				if(to.linkTo > fromSwitch){
+					connectivity.add(to.linkTo);
 				}
 			}
-			int total_removed_link=0;
-			for(int i=0; i<noNodes; i++)
-			{
-				int k = adjacencyList[i].size();
-				adjacencyList[i].removeAll(ll);
-				total_removed_link += k - adjacencyList[i].size();
-			}
-
-			System.out.println("CYH: We remove the number of cables this time:" + total_removed_link);
+			Collections.sort(connectivity);
+			int toSwitch = connectivity.elementAt(linkOffset);
+			System.out.println("remove link:"+cand+"  "+"from "+fromSwitch+" to "+toSwitch);
+			removeBidirNeighbor(fromSwitch, toSwitch);
 		}
+
 	}
 
 	public int getShortestLength(int srcTor, int destTor)
@@ -1490,8 +1469,7 @@ public class Graph
 				}
 			}
 
-			System.out.println("Number of edges " + edgeID);
-			System.out.println("Map size " + rndmap.size());
+			System.out.println("Number of links " + edgeID/2);
 
 			for (int i = 0; i < rndmap.size(); i++) {
 				int from = rndmap.get(i).from;

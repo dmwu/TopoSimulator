@@ -24,16 +24,16 @@ public class F10 extends Graph {
         populateAdjacencyList();
         name = "F10";
     }
-    public F10(int K_, double fail_rate){
+    public F10(int K_, int failurePosition, double fail_rate){
         super(K_*K_*5/4);
         this.K = K_;
         System.out.println(K_ + " ^^^^^^^^^^^^^^^^^^^^ ");
         populateAdjacencyList();
         name = "F10";
-        failLinks(fail_rate);
+        failLinks(fail_rate,K_, failurePosition);
     }
 
-    public F10(int K_, int failLinkCount){
+    public F10(int K_, int failurePosition, int failLinkCount){
         super(K_*K_*5/4);
         this.K = K_;
         System.out.println(K_ + " ^^^^^^^^^^^^^^^^^^^^ ");
@@ -41,7 +41,7 @@ public class F10 extends Graph {
         name = "F10";
         int totalLinks = K*K*K/2;
         double failRate = failLinkCount/(double)totalLinks;
-        failLinks(failRate);
+        failLinks(failRate, K_, failurePosition);
     }
 
     // +++++++++++ THIS CONSTRUCTION ROUTINE FOR VANILLA FAT TREE +++++++++++++++++++++++++++++++

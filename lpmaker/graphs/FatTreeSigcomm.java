@@ -29,16 +29,16 @@ public class FatTreeSigcomm extends Graph{
 		populateAdjacencyList();
 		name = "fat";
 	}
-	public FatTreeSigcomm(int K_, double fail_rate){
+	public FatTreeSigcomm(int K_,  int failurePositons, double fail_rate){
 		super(K_*K_*5/4);
 		this.K = K_;
 		System.out.println(K_ + " ^^^^^^^^^^^^^^^^^^^^ ");
 		populateAdjacencyList();
 		name = "fat";
-		failLinks(fail_rate);
+		failLinks(fail_rate, K_, failurePositons);
 	}
 
-	public FatTreeSigcomm(int K_, int failLinkCount){
+	public FatTreeSigcomm(int K_, int failurePositions, int failLinkCount){
 		super(K_*K_*5/4);
 		this.K = K_;
 		System.out.println(K_ + " ^^^^^^^^^^^^^^^^^^^^ ");
@@ -46,7 +46,7 @@ public class FatTreeSigcomm extends Graph{
 		name = "fat";
 		int totalLinks = K*K*K/2;
 		double failRate = failLinkCount/(double)totalLinks;
-		failLinks(failRate);
+		failLinks(failRate, K_, failurePositions );
 	}
 
 	/*public ArrayList TrafficGenAllAll()
