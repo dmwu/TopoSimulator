@@ -6,16 +6,16 @@ for topo in 1 2 3
     do
     for failurePos in 0 1 2
         do
-        for failCount in 0 1 2 3 5 10
+        for failCount in 0 1 3 5 10 20
             do
-            for trial in 1 2 3 4 5
+            for trial in 1 2 3 4
                 do
                 java lpmaker.TestRunAvg "$topo" "$failurePos" "$failCount" "$trial"
 
                 for entry in ./*.lp
                     do
                     echo "$entry"
-                    gurobi_cl Threads=10 Method=2 Crossover=0 ResultFile=${entry}'.sol' ${entry}
+                    gurobi_cl Threads=11 Method=2 Crossover=0 ResultFile=${entry}'.sol' ${entry}
                 done
 
                 for entry in ./*.lp.sol
