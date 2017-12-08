@@ -11,22 +11,23 @@ for topo in 1 2 3
             for trial in 1 2 3 4
                 do
                 java lpmaker.TestRunAvg "$topo" "$failurePos" "$failCount" "$trial" &
-
-                for entry in ./*.lp
-                    do
-                    echo "$entry"
-                    gurobi_cl Threads=10 Method=2 Crossover=0 ResultFile=${entry}'.sol' ${entry} &
-                done
-                wait
-                for entry in ./*.lp.sol
-                    do
-                    echo "$entry"
-                    line=$(head -n 1 "$entry")
-                    echo -e "$entry $line" >> "finalAvg.txt"
-                done
-                rm ./*.lp
-                rm ./*.lp.sol
             done
         done
     done
 done
+
+for entry in ./*.lp
+    do
+    echo "$entry"
+    gurobi_cl Threads=10 Method=2 Crossover=0 ResultFile=${entry}'.sol' ${entry} &
+done
+wait
+rm ./*.lp
+
+for entry in ./*.lp.sol
+    do
+    echo "$entry"
+    line=$(head -n 1 "$entry")
+    echo -e "$entry $line" >> "finalAvg.txt"
+done
+rm ./*.lp.sol
