@@ -751,6 +751,7 @@ public class Graph
 
 	}
 
+
 	public int getShortestLength(int srcTor, int destTor)
 	{
 		return shortestPathLen[srcTor][destTor];
@@ -1698,7 +1699,7 @@ public class Graph
 	{
 
 		modifiedFloydWarshall();
-		int r=noNodes; //# of ToR switches
+		int r= noNodes; //# of ToR switches
 		int svrs=totalWeight;
 
 		int nflowlet = 1;

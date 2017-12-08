@@ -29,6 +29,5 @@ public class TestRunAvg {
                 AspenTree asp = new AspenTree(k, 4, 8, failurePos, failCount);
                 asp.PrintGraphforMCFFairCondensedAverage("aspen_avg_k" + k + "_linkType"+failurePos+"_failureCount"+failCount + "_" + trial + ".lp", 1, 0);
             }
-
         }
 }
