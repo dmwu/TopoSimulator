@@ -8,7 +8,7 @@ for topo in 1 2 3
         do
         for failCount in 0 1 3 5 10 20
             do
-            for trial in 1 2 3
+            for trial in 1 2 3 4
                 do
                 java lpmaker.TestRunMin "$topo" "$failurePos" "$failCount" "$trial" &
             done
