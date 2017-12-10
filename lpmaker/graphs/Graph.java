@@ -703,7 +703,7 @@ public class Graph
 	//modified by wdm 10/12/2017
 	public void failLinks(double percentage, int Clos_K, int pos)
 	{
-		//pos meaning:  1-> edge2agg links;  2->core links
+		//pos meaning: 0-> any links; 1-> edge2agg links;  2->core links
 		int totalEdges = 0;
 		for (int i =0; i < noNodes; i++)
 		{

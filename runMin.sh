@@ -2,7 +2,8 @@
 
 javac lpmaker/TestRunMin.java
 
-for topo in 1 2 3
+#for topo in 1 2 3
+for topo in 3
     do
     for failurePos in 0 1 2
         do
