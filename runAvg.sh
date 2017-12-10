@@ -12,13 +12,13 @@ for topo in 1 2 3
                 do
                 java lpmaker.TestRunAvg "$topo" "$failurePos" "$failCount" "$trial"
             done
-            wait
+            #wait
             for entry in ./*.lp
                 do
                 echo "$entry"
-                gurobi_cl Threads=10 Method=2 Crossover=0 ResultFile=${entry}'.sol' ${entry}
+                gurobi_cl Threads=12 Method=2 Crossover=0 ResultFile=${entry}'.sol' ${entry}
             done
-            wait
+            #wait
             rm ./*.lp
 
             for entry in ./*.lp.sol
