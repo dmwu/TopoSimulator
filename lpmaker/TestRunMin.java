@@ -27,9 +27,8 @@ public class TestRunMin {
             F10 f10 = new F10(k, failurePos, failCount);
             f10.PrintGraphforMCFFairCondensed("ften_min_k" + k + "_linkType"+failurePos+"_failureCount"+failCount + "_" + trial + ".lp", 1, 0);
         }else{
-            AspenTree asp = new AspenTree(k, 4, 8, failurePos,failCount);
+            AspenTree asp = new AspenTree(k, 4, 8, failurePos, failCount);
             asp.PrintGraphforMCFFairCondensed("aspen_min_k" + k + "_linkType"+failurePos+"_failureCount"+failCount + "_" + trial + ".lp", 1, 0);
         }
-
     }
 }
