@@ -26,7 +26,7 @@ for topo in 3
                 do
                 echo "$entry"
                 line=$(head -n 1 "$entry")
-                echo -e "${entry} ${line}" >> "newfinalAvg.txt"
+                echo -e "${entry} ${line}" >> "aspenfinalAvg.txt"
             done
             rm ./*.lp.sol
         done

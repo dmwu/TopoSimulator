@@ -9,7 +9,7 @@ for topo in 3
         do
         for failCount in 0 1 3 5 10 20
             do
-            for trial in 1 2
+            for trial in 1 2 3
                 do
                 java lpmaker.TestRunMin "$topo" "$failurePos" "$failCount" "$trial"
             done
@@ -25,7 +25,7 @@ for topo in 3
                 do
                 echo "$entry"
                 line=$(head -n 1 "$entry")
-                echo -e "${entry} ${line}" >> "newfinalMin.txt"
+                echo -e "${entry} ${line}" >> "aspenfinalMin.txt"
             done
             rm ./*.lp.sol
         done
