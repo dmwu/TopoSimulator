@@ -2,9 +2,9 @@
 
 javac lpmaker/TestRunMin.java
 
-for topo in 1 2 3
+for trafficMode in 0 11 13 15
     do
-    for trafficMode in 0 11 13 15
+    for topo in 1 2 3
         do
         for failurePos in 0 1 2
             do
@@ -21,17 +21,18 @@ for topo in 1 2 3
                     gurobi_cl Threads=12 Method=2 Crossover=0 ResultFile=$entry'.sol' $entry
                 done
                 #wait
-                rm ./*.lp
-                for entry in ./*.lp.sol
-                    do
-                    echo "$entry"
-                    line=$(head -n 1 "$entry")
-                    echo -e "${entry} ${line}" >> "finalMinGeneral.txt"
-                done
-                rm ./*.lp.sol
             done
         done
     done
+
+    rm ./*.lp
+    for entry in ./*.lp.sol
+        do
+        echo "$entry"
+        line=$(head -n 1 "$entry")
+        echo -e "${entry} ${line}" >> "finalMin${trafficMode}.txt"
+    done
+    rm ./*.lp.sol
 done
 #wait
 
