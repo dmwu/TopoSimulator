@@ -28,7 +28,7 @@ public class TestRunAvg {
         }else if(trafficMode == 11){
             para = k*k/4;
             traffic="stride";
-        }else if(trafficMode == 13){
+        }else if(trafficMode == 2){ // maybe we can modify to all2one
             para = 100;
             traffic = "hotspot";
         }else if(trafficMode == 15){

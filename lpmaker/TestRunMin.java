@@ -26,14 +26,16 @@ public class TestRunMin {
         if(trafficMode == 0){
             para = k*k*k/4;
             traffic="perm";
+        }else if(trafficMode == 2){
+            //make it all2one
+            para = 0;
+            traffic = "hotspot";
         }else if(trafficMode == 11){
             para = k*k/4;
             traffic="stride";
-        }else if(trafficMode == 13){
-            para = 100;
-            traffic = "hotspot";
         }else if(trafficMode == 15){
-            para = 50;
+            //make it pod2pod
+            para = k*k/4;
             traffic = "m2m";
         }
         System.out.println("Topo:"+topo+" position:" +failurePos+" failCount:"+failCount+ " trial:"+trial);
@@ -47,7 +49,7 @@ public class TestRunMin {
                     "_linkType"+failurePos+"_failureCount"+failCount + "_" + trial + ".lp", trafficMode,para);
         }else{
             AspenTree asp = new AspenTree(k, 4, 8, failurePos, failCount);
-            asp.PrintGraphforMCFFairCondensed("aspen_min_k" + k +"_traffic_"+traffic+
+            asp.PrintGraphforMCFFairCondensed("aspen_min_k" + k +"_traffic"+traffic+
                     "_linkType"+failurePos+"_failureCount"+failCount + "_" + trial + ".lp", trafficMode,para);
         }
     }

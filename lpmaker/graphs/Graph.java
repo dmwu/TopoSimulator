@@ -729,10 +729,13 @@ public class Graph
 			linkStartIndex = totalEdges - linksPerLayer;
 			range = linksPerLayer;
 		}
-
+		//fix links to left-most links
+		int index = 0;
 		while(candiates.size() < failCount){
-			int cand = rand.nextInt(range) + linkStartIndex;
+			int cand =  index + linkStartIndex;
 			candiates.add(cand);
+			index++;
+			assert(index < range);
 		}
 		for (int cand: candiates){
 			int fromSwitch = cand / (Clos_K/2);
@@ -906,39 +909,26 @@ public class Graph
 
 		return ls;
 	}
-
+	//[12-11] modified by WDM to be pod2pod; c should be the pod size
 	public ArrayList TrafficGenManyToMany (int c) {
 		ArrayList<TrafficPair> ls = new ArrayList<TrafficPair>();
-
-		ArrayList<Integer> hosts = new ArrayList<Integer> ();
-		int t;
-		boolean f;
+		ArrayList<Integer> ahosts = new ArrayList<Integer> ();
+		ArrayList<Integer> bhosts = new ArrayList<Integer> ();
 		int i,j;
-
 		for (i=0;i<c;i++){
-			do {
-    			t = (int)(Math.random()*totalWeight);
-    			f = false;
-    			for (j=0;j<hosts.size();j++)
-					if (hosts.get(j)==t){
-						f = true;
-						break;
-					}
-    			}while(f);
-
-    		hosts.add(t);
+    		ahosts.add(i);
+    		bhosts.add(i+c);
   		}
-
-		for (i=0;i<hosts.size();i++){
-    		for (j=0;j<hosts.size();j++){
-    			if (i == j)
-    				continue;
-    			ls.add(new TrafficPair(hosts.get(i), hosts.get(j)));
+		for (i=0;i<ahosts.size();i++){
+    		for (j=0;j<bhosts.size();j++){
+//    			if (i == j)
+//    				continue;
+    			ls.add(new TrafficPair(ahosts.get(i), bhosts.get(j)));
     		}
   		}
-
   		return ls;
 	}
+
 
 	public ArrayList TrafficGenLocalManyToMany (int hostPerPod) {
 		ArrayList<TrafficPair> ls = new ArrayList<TrafficPair>();
@@ -952,7 +942,6 @@ public class Graph
 
 		if (c > hostPerPod)
 			c = hostPerPod;
-
 		for (i=0;i<c;i++){
 			do {
     			t = (int)(Math.random()*hostPerPod);
@@ -963,7 +952,6 @@ public class Graph
 						break;
 					}
     			}while(f);
-
     		hosts.add(t);
   		}
 
@@ -974,7 +962,6 @@ public class Graph
     			ls.add(new TrafficPair(hosts.get(i), hosts.get(j)));
     		}
   		}
-
   		return ls;
 	}
 
