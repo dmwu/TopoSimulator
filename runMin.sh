@@ -1,14 +1,23 @@
 #!/bin/bash
 
 javac lpmaker/TestRunMin.java
+rm ./*.lp
 
 for trafficMode in 0 11 13 15
     do
     for topo in 1 2 3
         do
-        for failurePos in 0 1 2
+        java lpmaker.TestRunMin "$topo" "$trafficMode" 0 0 0
+        for entry in ./*.lp
             do
-            for failCount in 0 1 3 5 10 20
+            echo "$entry"
+            gurobi_cl Threads=12 Method=2 Crossover=0 ResultFile=$entry'.sol' $entry
+        done
+        rm ./*.lp
+
+        for failurePos in 1 2
+            do
+            for failCount in 1 3 5 10 20
                 do
                 for trial in 1 2 3
                     do
@@ -20,12 +29,11 @@ for trafficMode in 0 11 13 15
                     echo "$entry"
                     gurobi_cl Threads=12 Method=2 Crossover=0 ResultFile=$entry'.sol' $entry
                 done
-                #wait
+                rm ./*.lp
             done
         done
     done
 
-    rm ./*.lp
     for entry in ./*.lp.sol
         do
         echo "$entry"
