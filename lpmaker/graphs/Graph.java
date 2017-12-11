@@ -1198,7 +1198,6 @@ public class Graph
 		    	is_done[src]=true;
 
 		    	ls.add(new TrafficPair(src, first));
-
 		    	is_done[src] = true;
 		    } 
 		}
