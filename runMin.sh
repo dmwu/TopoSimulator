@@ -38,7 +38,7 @@ for trafficMode in 0 2 11 15
         do
         echo "$entry"
         line=$(head -n 1 "$entry")
-        echo -e "${entry} ${line}" >> "finalMin${trafficMode}.txt"
+        echo -e "${entry} ${line}" >> "newMin${trafficMode}.txt"
     done
     rm ./*.lp.sol
 done
