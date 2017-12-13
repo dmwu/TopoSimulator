@@ -24,22 +24,22 @@ public class F10 extends Graph {
         populateAdjacencyList();
         name = "F10";
     }
-    public F10(int K_, int failurePosition, double fail_rate){
+    public F10(int K_, int failureMode, double fail_rate){
         super(K_*K_*5/4);
         this.K = K_;
         populateAdjacencyList();
         name = "F10";
-        failLinks(fail_rate,K_, failurePosition);
+        failLinks(failureMode,fail_rate,K_);
     }
 
-    public F10(int K_, int failurePosition, int failLinkCount){
+    public F10(int K_, int failureMode, int failLinkCount){
         super(K_*K_*5/4);
         this.K = K_;
         populateAdjacencyList();
         name = "F10";
         int totalLinks = K*K*K/2;
         double failRate = failLinkCount/(double)totalLinks;
-        failLinks(failRate, K_, failurePosition);
+        failLinks(failureMode, failRate, K_);
     }
 
     // +++++++++++ THIS CONSTRUCTION ROUTINE FOR VANILLA FAT TREE +++++++++++++++++++++++++++++++
@@ -87,8 +87,6 @@ public class F10 extends Graph {
                 // For new comparison method, ANKIT changed this to set up arbitrary numbers of terminals!
                 weightEachNode[pod*K/2+i] = K/2;
                 totalWeight += K/2;
-                //weightEachNode[pod*K/2+i] = 5;
-                //totalWeight += 5;
             }
         }
     }

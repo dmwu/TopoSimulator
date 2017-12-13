@@ -29,22 +29,24 @@ public class FatTreeSigcomm extends Graph{
 		populateAdjacencyList();
 		name = "fat";
 	}
-	public FatTreeSigcomm(int K_,  int failurePositons, double fail_rate){
+	public FatTreeSigcomm(int K_,  int failureMode, double fail_rate, boolean sharebackup){
 		super(K_*K_*5/4);
 		this.K = K_;
 		populateAdjacencyList();
 		name = "fat";
-		failLinks(fail_rate, K_, failurePositons);
+		this.ShareBackup=sharebackup;
+		failLinks(failureMode,fail_rate, K_);
 	}
 
-	public FatTreeSigcomm(int K_, int failurePositions, int failLinkCount){
+	public FatTreeSigcomm(int K_, int failureMode, int failLinkCount, boolean sharebackup){
 		super(K_*K_*5/4);
 		this.K = K_;
 		populateAdjacencyList();
 		name = "fat";
+		this.ShareBackup = sharebackup;
 		int totalLinks = K*K*K/2;
 		double failRate = failLinkCount/(double)totalLinks;
-		failLinks(failRate, K_, failurePositions );
+		failLinks(failureMode,failRate, K_);
 	}
 
 	/*public ArrayList TrafficGenAllAll()
@@ -149,8 +151,6 @@ public class FatTreeSigcomm extends Graph{
 			}
 		}
 		
-		
-		
 		//set weights
 		setUpFixWeight(0);
 		//int total = 0;
@@ -159,8 +159,6 @@ public class FatTreeSigcomm extends Graph{
 				// For new comparison method, ANKIT changed this to set up arbitrary numbers of terminals!
 				weightEachNode[pod*K/2+i] = K/2;
 				totalWeight += K/2;
-				//weightEachNode[pod*K/2+i] = 5;
-				//totalWeight += 5;
 			}
 		}
 	}

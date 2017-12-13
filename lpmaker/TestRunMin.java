@@ -8,17 +8,17 @@ import lpmaker.graphs.*;
 /**
  * Created by wdm on 9/22/17.
  * For aspen trees:   (k,n,d,S) ={(8, 4, 4, 32), (16, 4, 8, 128), (24, 4, 12, 288), (32, 4, 16, 512)}
- * parameters: topology: 1->fat-tree;  2->f10; 3-> aspentree
+ * parameters: topology: 0->fat-tree; 1->shareBackup; 2->f10; 3-> aspentree
  * trafficMode: 0 -> permutation;  11-> podStride;  13-> hotspot; 15 ->many2many;
- *              failureCount: count of failed links
- *             failurePos: 0-> global random;  1->edge2agg links; 2-> core links
+ * failureCount: count of failed links
+ * failureMode: 0-random: 1->randomAgg; 2->randomCore;
  */
 public class TestRunMin {
     public static void main(String args[]) throws IOException {
-        int k = 16;
+        int k = 8;
         int topo = Integer.parseInt(args[0]);
         int trafficMode = Integer.parseInt(args[1]);
-        int failurePos = Integer.parseInt(args[2]);
+        int failureMode = Integer.parseInt(args[2]);
         int failCount = Integer.parseInt(args[3]);
         int trial = Integer.parseInt(args[4]);
         int para = 0;
@@ -38,19 +38,23 @@ public class TestRunMin {
             para = k*k/4;
             traffic = "m2m";
         }
-        System.out.println("Topo:"+topo+" position:" +failurePos+" failCount:"+failCount+ " trial:"+trial);
-        if(topo == 1) {
-            FatTreeSigcomm fts = new FatTreeSigcomm(k , failurePos, failCount);
-            fts.PrintGraphforMCFFairCondensed("fattree_min_k" + k +"_traffic_"+traffic+
-                    "_linkType"+failurePos+"_failureCount"+failCount + "_" + trial + ".lp", trafficMode,para);
+        System.out.println("Topo:"+topo+" failureMode:" +failureMode+" failCount:"+failCount+ " trial:"+trial);
+        if(topo == 0) {
+            FatTreeSigcomm fts = new FatTreeSigcomm(k, failureMode, failCount, false);
+            fts.PrintGraphforMCFFairCondensed("fattree_min_k" + k + "_traffic_" + traffic +
+                    "_failMode" + failureMode + "_failureCount" + failCount + "_" + trial + ".lp", trafficMode, para);
+        }else if(topo == 1) {
+            FatTreeSigcomm fts = new FatTreeSigcomm(k , failureMode, failCount, true);
+            fts.PrintGraphforMCFFairCondensed("shareBackup_min_k" + k +"_traffic_"+traffic+
+                    "_failMode"+failureMode+"_failureCount"+failCount + "_" + trial + ".lp", trafficMode,para);
         }else if(topo == 2){
-            F10 f10 = new F10(k, failurePos, failCount);
+            F10 f10 = new F10(k, failureMode, failCount);
             f10.PrintGraphforMCFFairCondensed("ften_min_k" + k +"_traffic_"+traffic+
-                    "_linkType"+failurePos+"_failureCount"+failCount + "_" + trial + ".lp", trafficMode,para);
+                    "_failMode"+failureMode+"_failureCount"+failCount + "_" + trial + ".lp", trafficMode,para);
         }else{
-            AspenTree asp = new AspenTree(k, 4, 8, failurePos, failCount);
+            AspenTree asp = new AspenTree(k, 4, 4, failureMode, failCount);
             asp.PrintGraphforMCFFairCondensed("aspen_min_k" + k +"_traffic"+traffic+
-                    "_linkType"+failurePos+"_failureCount"+failCount + "_" + trial + ".lp", trafficMode,para);
+                    "_failMode"+failureMode+"_failureCount"+failCount + "_" + trial + ".lp", trafficMode,para);
         }
     }
 }

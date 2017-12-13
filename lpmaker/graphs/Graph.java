@@ -23,7 +23,7 @@ public class Graph
 {
 	public static final int INFINITY = 999999999;
 	public static final int INVALID_NODE_ID = -1;
-
+	public boolean ShareBackup = false;
 	public int noNodes;
 	public int numEdges;
 	public Vector<Link>[] adjacencyList;
@@ -701,9 +701,11 @@ public class Graph
 	}
 
 	//modified by wdm 10/12/2017
-	public void failLinks(double percentage, int Clos_K, int pos)
-	{
-		//pos meaning: 0-> any links; 1-> edge2agg links;  2->core links
+	public void failLinks(int mode, double percentage, int Clos_K) {
+		//mode meaning: 0-random:
+		// 1->randomAgg; 2->randomCore;
+		// 3->aggPodStride; 4->coreSwitchStride
+		// 5->aggCoreInterleavingWithPodStride;
 		int totalEdges = 0;
 		for (int i =0; i < noNodes; i++)
 		{
@@ -712,43 +714,76 @@ public class Graph
 		totalEdges /= 2;
 
 		int failCount = (int) (totalEdges*percentage);
-
 		int linksPerLayer = Clos_K*Clos_K*Clos_K/4;
-		int range, linkStartIndex;
-		Set<Integer> candiates = new HashSet<>();
-		if (pos == 0) {
-			//don't care
-			linkStartIndex = 0;
-			range = totalEdges;
-		}else if(pos == 1) {
-			//edge2agg links
-			linkStartIndex = 0;
-			range = linksPerLayer;
-		}else{
-			//core links
-			linkStartIndex = totalEdges - linksPerLayer;
-			range = linksPerLayer;
+		int linksPerPod = Clos_K*Clos_K/4;
+		int switchesPerLayer = Clos_K*Clos_K/2;
+		assert(totalEdges == 2*linksPerLayer);
+
+		Set<Integer> linkCandiates = new HashSet<>();
+		if (mode == 0) {
+			while(linkCandiates.size()<failCount){
+				int cand = rand.nextInt(totalEdges);
+				linkCandiates.add(cand);
+			}
+		}else if(mode == 1) {
+			while(linkCandiates.size()<failCount){
+				int cand = rand.nextInt(linksPerLayer);
+				linkCandiates.add(cand);
+			}
+
+		}else if(mode == 2){
+			while(linkCandiates.size()<failCount){
+				int cand = rand.nextInt(linksPerLayer)+linksPerLayer;
+				linkCandiates.add(cand);
+			}
 		}
-		//fix links to left-most links
-		int index = 0;
-		while(candiates.size() < failCount){
-			int cand =  index + linkStartIndex;
-			candiates.add(cand);
-			index++;
-			assert(index < range);
+		if(ShareBackup){
+			Set<Integer> failureGroups = new HashSet<>();
+			Set<Integer> mappedSwitches = new HashSet<>();
+			int sid1, sid2, gid1, gid2;
+			Set<Integer> outstandingLinks = new HashSet<Integer>();
+			for(int cand: linkCandiates){
+				sid1 = cand/(Clos_K/2);
+				if(cand < linksPerLayer)
+					//sid2 is not exactly, but in the same failure group
+					sid2 = sid1 + switchesPerLayer- sid1%(Clos_K/2)+cand%(Clos_K/2);
+				else{
+					sid2 = sid1%(Clos_K/2)*(Clos_K/2)+cand%(Clos_K/2) + switchesPerLayer*2;
+				}
+				if(!mappedSwitches.contains(sid1)){
+					mappedSwitches.add(sid1);
+					gid1 = sid1/(Clos_K/2);
+					if(failureGroups.contains(gid1))
+						outstandingLinks.add(cand);
+					else{
+						failureGroups.add(gid1);
+					}
+				}
+				if(!mappedSwitches.contains(sid2)){
+					mappedSwitches.add(sid2);
+					gid2 = sid2/(Clos_K/2);
+					if(failureGroups.contains(gid2))
+						outstandingLinks.add(cand);
+					else {
+						failureGroups.add(gid2);
+					}
+				}
+			}
+			linkCandiates = outstandingLinks;
 		}
-		for (int cand: candiates){
-			int fromSwitch = cand / (Clos_K/2);
-			int linkOffset = cand % (Clos_K/2);
+
+		for (int cand : linkCandiates) {
+			int fromSwitch = cand / (Clos_K / 2);
+			int linkOffset = cand % (Clos_K / 2);
 			Vector<Integer> connectivity = new Vector<>();
-			for(Link to: adjacencyList[fromSwitch]){
-				if(to.linkTo > fromSwitch){
+			for (Link to : adjacencyList[fromSwitch]) {
+				if (to.linkTo > fromSwitch) {
 					connectivity.add(to.linkTo);
 				}
 			}
 			Collections.sort(connectivity);
 			int toSwitch = connectivity.elementAt(linkOffset);
-			System.out.println("remove link:"+cand+"  "+"from "+fromSwitch+" to "+toSwitch);
+			System.out.println("remove link:" + cand + "  " + "from " + fromSwitch + " to " + toSwitch);
 			removeBidirNeighbor(fromSwitch, toSwitch);
 		}
 
