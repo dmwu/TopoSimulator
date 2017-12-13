@@ -21,7 +21,7 @@ for trafficMode in 0 2 11 15
                 do
                 for trial in 1 2 3 4 5
                     do
-                    java lpmaker.TestRunMin "$topo" "$trafficMode" "$failurePMode" "$failCount" "$trial" &
+                    java lpmaker.TestRunMin "$topo" "$trafficMode" "$failureMode" "$failCount" "$trial" &
                 done
                 wait
                 for entry in ./*.lp
@@ -38,7 +38,7 @@ for trafficMode in 0 2 11 15
         do
         echo "$entry"
         line=$(head -n 1 "$entry")
-        echo -e "${entry} ${line}" >> "newMin${trafficMode}.txt"
+        echo -e "${entry} ${line}" >> "GMin${trafficMode}.txt"
     done
     rm ./*.lp.sol
 done
