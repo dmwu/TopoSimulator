@@ -8,7 +8,7 @@ import lpmaker.graphs.*;
 /**
  * Created by wdm on 9/22/17.
  * For aspen trees:   (k,n,d,S) ={(8, 4, 4, 32), (16, 4, 8, 128), (24, 4, 12, 288), (32, 4, 16, 512)}
- * parameters: topology: 0->fat-tree; 1->shareBackup; 2->f10; 3-> aspentree
+ * parameters: topology: 0->fat-tree; 1->oneBackup; 2->twoBackups; 3->f10; 4-> aspentree
  * trafficMode: 0 -> permutation;  11-> podStride;  13-> hotspot; 15 ->many2many;
  * failureCount: count of failed links
  * failureMode: 0-random: 1->randomAgg; 2->randomCore;
@@ -40,20 +40,24 @@ public class TestRunMin {
         }
         System.out.println("Topo:"+topo+" failureMode:" +failureMode+" failCount:"+failCount+ " trial:"+trial);
         if(topo == 0) {
-            FatTreeSigcomm fts = new FatTreeSigcomm(k, failureMode, failCount, false);
-            fts.PrintGraphforMCFFairCondensed("fattree_min_k" + k + "_traffic_" + traffic +
+            FatTreeSigcomm fts = new FatTreeSigcomm(k, failureMode, failCount, 0);
+            fts.PrintGraphforMCFFairCondensed("fattree_k" + k + "_traffic_" + traffic +
                     "_failMode" + failureMode + "_failureCount" + failCount + "_" + trial + ".lp", trafficMode, para);
         }else if(topo == 1) {
-            FatTreeSigcomm fts = new FatTreeSigcomm(k , failureMode, failCount, true);
-            fts.PrintGraphforMCFFairCondensed("shareBackup_min_k" + k +"_traffic_"+traffic+
+            FatTreeSigcomm fts = new FatTreeSigcomm(k , failureMode, failCount, 1);
+            fts.PrintGraphforMCFFairCondensed("Backup1_k" + k +"_traffic_"+traffic+
                     "_failMode"+failureMode+"_failureCount"+failCount + "_" + trial + ".lp", trafficMode,para);
-        }else if(topo == 2){
+        }else if(topo == 2) {
+            FatTreeSigcomm fts = new FatTreeSigcomm(k , failureMode, failCount, 2);
+            fts.PrintGraphforMCFFairCondensed("Backup2_k" + k +"_traffic_"+traffic+
+                    "_failMode"+failureMode+"_failureCount"+failCount + "_" + trial + ".lp", trafficMode,para);
+        }else if(topo == 3){
             F10 f10 = new F10(k, failureMode, failCount);
-            f10.PrintGraphforMCFFairCondensed("ften_min_k" + k +"_traffic_"+traffic+
+            f10.PrintGraphforMCFFairCondensed("ften_k" + k +"_traffic_"+traffic+
                     "_failMode"+failureMode+"_failureCount"+failCount + "_" + trial + ".lp", trafficMode,para);
         }else{
             AspenTree asp = new AspenTree(k, 4, 8, failureMode, failCount);
-            asp.PrintGraphforMCFFairCondensed("aspen_min_k" + k +"_traffic"+traffic+
+            asp.PrintGraphforMCFFairCondensed("aspen_k" + k +"_traffic_"+traffic+
                     "_failMode"+failureMode+"_failureCount"+failCount + "_" + trial + ".lp", trafficMode,para);
         }
     }

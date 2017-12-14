@@ -5,9 +5,6 @@
  * ******************************************************** */
 
 package lpmaker.graphs;
-import java.util.*;
-import java.io.*;
-import java.util.ArrayList;
 
 public class FatTreeSigcomm extends Graph{
 	
@@ -29,21 +26,21 @@ public class FatTreeSigcomm extends Graph{
 		populateAdjacencyList();
 		name = "fat";
 	}
-	public FatTreeSigcomm(int K_,  int failureMode, double fail_rate, boolean sharebackup){
+	public FatTreeSigcomm(int K_,  int failureMode, double fail_rate, int backups){
 		super(K_*K_*5/4);
 		this.K = K_;
 		populateAdjacencyList();
 		name = "fat";
-		this.ShareBackup=sharebackup;
+		this.ShareBackupNum = backups;
 		failLinks(failureMode,fail_rate, K_);
 	}
 
-	public FatTreeSigcomm(int K_, int failureMode, int failLinkCount, boolean sharebackup){
+	public FatTreeSigcomm(int K_, int failureMode, int failLinkCount, int backups){
 		super(K_*K_*5/4);
 		this.K = K_;
 		populateAdjacencyList();
 		name = "fat";
-		this.ShareBackup = sharebackup;
+		this.ShareBackupNum = backups;
 		int totalLinks = K*K*K/2;
 		double failRate = failLinkCount/(double)totalLinks;
 		failLinks(failureMode,failRate, K_);

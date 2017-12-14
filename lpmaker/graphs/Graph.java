@@ -7,7 +7,6 @@ package lpmaker.graphs;
 
 import java.util.*;
 import java.io.*;
-import java.math.*;
 
 class TrafficPair {
 	public int from;
@@ -23,7 +22,7 @@ public class Graph
 {
 	public static final int INFINITY = 999999999;
 	public static final int INVALID_NODE_ID = -1;
-	public boolean ShareBackup = false;
+	public int ShareBackupNum = 0;
 	public int noNodes;
 	public int numEdges;
 	public Vector<Link>[] adjacencyList;
@@ -702,7 +701,7 @@ public class Graph
 
 	//modified by wdm 10/12/2017
 	public void failLinks(int mode, double percentage, int Clos_K) {
-		//mode meaning: 0-random:
+		//mode meaning: 0-Real:
 		// 1->randomAgg; 2->randomCore;
 		// 3->aggPodStride; 4->coreSwitchStride
 		// 5->aggCoreInterleavingWithPodStride;
@@ -723,6 +722,7 @@ public class Graph
 		if (mode == 0) {
 			while(linkCandiates.size()<failCount){
 				int cand = rand.nextInt(totalEdges);
+				cand = rand.nextFloat()<0.63?cand+linksPerLayer:cand;
 				linkCandiates.add(cand);
 			}
 		}else if(mode == 1) {
@@ -736,16 +736,22 @@ public class Graph
 				int cand = rand.nextInt(linksPerLayer)+linksPerLayer;
 				linkCandiates.add(cand);
 			}
+		}else if(mode == 3){
+			int index = 0;
+			while(linkCandiates.size()<failCount){
+				int cand = (index%Clos_K)*linksPerPod+index/Clos_K;
+				linkCandiates.add(cand);
+				index++;
+			}
 		}
-		if(ShareBackup){
-			Set<Integer> failureGroups = new HashSet<>();
+		if(ShareBackupNum >0){
+			Map<Integer,Integer> failureGroups = new HashMap<>();
 			Set<Integer> mappedSwitches = new HashSet<>();
 			int sid1, sid2, gid1, gid2;
 			Set<Integer> outstandingLinks = new HashSet<Integer>();
 			for(int cand: linkCandiates){
 				sid1 = cand/(Clos_K/2);
 				if(cand < linksPerLayer)
-					//sid2 is not exactly, but in the same failure group
 					sid2 = sid1 + switchesPerLayer- sid1%(Clos_K/2)+cand%(Clos_K/2);
 				else{
 					sid2 = sid1%(Clos_K/2)*(Clos_K/2)+cand%(Clos_K/2) + switchesPerLayer*2;
@@ -753,22 +759,27 @@ public class Graph
 				if(!mappedSwitches.contains(sid1)){
 					mappedSwitches.add(sid1);
 					gid1 = sid1/(Clos_K/2);
-					if(failureGroups.contains(gid1))
-						outstandingLinks.add(cand);
+					if(failureGroups.containsKey(gid1))
+						failureGroups.put(gid1, failureGroups.get(gid1) + 1);
 					else{
-						failureGroups.add(gid1);
+						failureGroups.put(gid1,0);
 					}
+					if(failureGroups.get(gid1) > ShareBackupNum)
+						outstandingLinks.add(cand);
 				}
 				if(!mappedSwitches.contains(sid2)){
 					mappedSwitches.add(sid2);
 					gid2 = sid2/(Clos_K/2);
-					if(failureGroups.contains(gid2))
-						outstandingLinks.add(cand);
-					else {
-						failureGroups.add(gid2);
+					if(failureGroups.containsKey(gid2))
+						failureGroups.put(gid2, failureGroups.get(gid2) + 1);
+					else{
+						failureGroups.put(gid2,0);
 					}
+					if(failureGroups.get(gid2) > ShareBackupNum)
+						outstandingLinks.add(cand);
 				}
 			}
+
 			linkCandiates = outstandingLinks;
 		}
 
@@ -961,6 +972,7 @@ public class Graph
     			ls.add(new TrafficPair(ahosts.get(i), bhosts.get(j)));
     		}
   		}
+		System.out.println("pod2pod FLOWS = " + ls.size());
   		return ls;
 	}
 
