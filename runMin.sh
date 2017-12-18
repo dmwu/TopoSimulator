@@ -19,11 +19,10 @@ for trafficMode in 0 2 11 15
             do
             for failCount in 1 3 5 10 20
                 do
-                for trial in 1 2 3 4 5 6
+                for trial in 1 2 3 4 5 6 7 8
                     do
-                    java lpmaker.TestRunMin "$topo" "$trafficMode" "$failureMode" "$failCount" "$trial" &
+                    java lpmaker.TestRunMin "$topo" "$trafficMode" "$failureMode" "$failCount" "$trial"
                 done
-                wait
                 for entry in ./*.lp
                     do
                     echo "$entry"
