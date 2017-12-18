@@ -6,6 +6,7 @@ rm ./*.lp
 for trafficMode in 0 2 11 15
     do
     for topo in 0 1 2 3 4
+
         do
         java lpmaker.TestRunMin "$topo" "$trafficMode" 0 0 0
         for entry in ./*.lp
@@ -15,7 +16,7 @@ for trafficMode in 0 2 11 15
         done
         rm ./*.lp
 
-        for failureMode in 0 1 2 3
+        for failureMode in 1 2 3 4
             do
             for failCount in 1 3 5 10 20
                 do

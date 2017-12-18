@@ -701,10 +701,10 @@ public class Graph
 
 	//modified by wdm 10/12/2017
 	public void failLinks(int mode, double percentage, int Clos_K) {
-		//mode meaning: 0-Real:
-		// 1->randomAgg; 2->randomCore;
-		// 3->aggPodStride; 4->coreSwitchStride
-		// 5->aggCoreInterleavingWithPodStride;
+		//mode meaning: 1-Real:
+		// 2->randomAgg; 3->randomCore;
+		// 4->aggPodStride; 5->coreSwitchStride
+		// 6->aggCoreInterleavingWithPodStride;
 		int totalEdges = 0;
 		for (int i =0; i < noNodes; i++)
 		{
@@ -719,24 +719,24 @@ public class Graph
 		assert(totalEdges == 2*linksPerLayer);
 
 		Set<Integer> linkCandiates = new HashSet<>();
-		if (mode == 0) {
+		if (mode == 1) {
 			while(linkCandiates.size()<failCount){
 				int cand = rand.nextInt(totalEdges);
 				cand = rand.nextFloat()<0.63?cand+linksPerLayer:cand;
 				linkCandiates.add(cand);
 			}
-		}else if(mode == 1) {
+		}else if(mode == 2) {
 			while(linkCandiates.size()<failCount){
 				int cand = rand.nextInt(linksPerLayer);
 				linkCandiates.add(cand);
 			}
 
-		}else if(mode == 2){
+		}else if(mode == 3){
 			while(linkCandiates.size()<failCount){
 				int cand = rand.nextInt(linksPerLayer)+linksPerLayer;
 				linkCandiates.add(cand);
 			}
-		}else if(mode == 3){
+		}else if(mode == 4){
 			int index = 0;
 			while(linkCandiates.size()<failCount){
 				int cand = (index%Clos_K)*linksPerPod+index/Clos_K;
