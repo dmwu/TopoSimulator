@@ -721,7 +721,7 @@ public class Graph
 		Set<Integer> linkCandiates = new HashSet<>();
 		if (mode == 1) {
 			while(linkCandiates.size()<failCount){
-				int cand = rand.nextInt(totalEdges);
+				int cand = rand.nextInt(linksPerLayer);
 				cand = rand.nextFloat()<0.63?cand+linksPerLayer:cand;
 				linkCandiates.add(cand);
 			}
@@ -782,10 +782,10 @@ public class Graph
 
 			linkCandiates = outstandingLinks;
 		}
+		Map<Integer, Vector<Integer>> linkToSwitches = new HashMap<>();
 
-		for (int cand : linkCandiates) {
+		for(int cand: linkCandiates){
 			int fromSwitch = cand / (Clos_K / 2);
-			int linkOffset = cand % (Clos_K / 2);
 			Vector<Integer> connectivity = new Vector<>();
 			for (Link to : adjacencyList[fromSwitch]) {
 				if (to.linkTo > fromSwitch) {
@@ -793,6 +793,14 @@ public class Graph
 				}
 			}
 			Collections.sort(connectivity);
+			linkToSwitches.put(cand,connectivity);
+		}
+
+		for (int cand : linkCandiates) {
+			int fromSwitch = cand / (Clos_K / 2);
+			int linkOffset = cand % (Clos_K / 2);
+			Vector<Integer> connectivity = linkToSwitches.get(cand);
+			assert(connectivity.size()==Clos_K/2);
 			int toSwitch = connectivity.elementAt(linkOffset);
 			System.out.println("remove link:" + cand + "  " + "from " + fromSwitch + " to " + toSwitch);
 			removeBidirNeighbor(fromSwitch, toSwitch);
@@ -1637,8 +1645,8 @@ public class Graph
 						//constraint = "";
 					}
 				}
-				if(i > 0 && i % 50 == 0)
-					System.out.println(new Date() + ": "+i+" of "+noNodes+" done");
+				//if(i > 0 && i % 50 == 0)
+					//System.out.println(new Date() + ": "+i+" of "+noNodes+" done");
 			}
 			//>
 
@@ -1714,8 +1722,8 @@ public class Graph
 						fid++;
 					}
 				}
-				if(f > 0 && f % 50 == 0)
-					System.out.println(new Date() + ": "+f+" of "+noNodes+" done");
+				//if(f > 0 && f % 50 == 0)
+				//	System.out.println(new Date() + ": "+f+" of "+noNodes+" done");
 			}
 			
 			out.write("End\n");
