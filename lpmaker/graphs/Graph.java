@@ -722,7 +722,7 @@ public class Graph
 		if (mode == 1) {
 			while(linkCandiates.size()<failCount){
 				int cand = rand.nextInt(linksPerLayer);
-				cand = rand.nextFloat()<0.63?cand+linksPerLayer:cand;
+				cand = rand.nextFloat()<0.63?cand:cand+linksPerLayer;
 				linkCandiates.add(cand);
 			}
 		}else if(mode == 2) {

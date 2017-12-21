@@ -108,9 +108,7 @@ public class AspenTree extends Graph{
             return K*K*K/4;
         }
 
-        public int getNoSwitches(){
-            return K*K*5/4;
-        }
+        public int getNoSwitches(){ return K*K*7/4; }
 
         public int svrToSwitch(int i)	//i is the server index. return the switch index.
         {
