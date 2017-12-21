@@ -18,9 +18,9 @@ for trafficMode in 0 2 11 15
 
         for failureMode in 1 2 3 4
             do
-            for failCount in 1 3 5 10 20
+            for failCount in 1 3 5 10 15 20
                 do
-                for trial in 1 2 3 4 5 6 7 8
+                for trial in 1 2 3 4 5 6 7
                     do
                     java lpmaker.TestRunMin "$topo" "$trafficMode" "$failureMode" "$failCount" "$trial"
                 done

@@ -27,14 +27,14 @@ public class TestRunMin {
             para = k*k*k/4;
             traffic="perm";
         }else if(trafficMode == 2){
-            //make it all2one
-            para = 0;
+            //make it all2onePod
+            para = k*k/4;
             traffic = "hotspot";
         }else if(trafficMode == 11){
             para = k*k/4;
             traffic="stride";
         }else if(trafficMode == 15){
-            //make it pod2pod
+            //make it 2pod to 2pod
             para = k*k/4;
             traffic = "m2m";
         }
@@ -46,7 +46,7 @@ public class TestRunMin {
         }else if(topo == 1) {
             FatTreeSigcomm fts = new FatTreeSigcomm(k , failureMode, failCount, 1);
             fts.PrintGraphforMCFFairCondensed("Backup1_k" + k +"_traffic_"+traffic+
-                    "_failMode"+failureMode+"_failureCount"+failCount + "_" + trial + ".lp", trafficMode,para);
+                    "_failMode"+failureMode+"_failureCount"+failCount + "_" + trial + ".lp", trafficMode, para);
         }else if(topo == 2) {
             FatTreeSigcomm fts = new FatTreeSigcomm(k , failureMode, failCount, 2);
             fts.PrintGraphforMCFFairCondensed("Backup2_k" + k +"_traffic_"+traffic+

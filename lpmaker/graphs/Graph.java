@@ -703,8 +703,7 @@ public class Graph
 	public void failLinks(int mode, double percentage, int Clos_K) {
 		//mode meaning: 1-Real:
 		// 2->randomAgg; 3->randomCore;
-		// 4->aggPodStride; 5->coreSwitchStride
-		// 6->aggCoreInterleavingWithPodStride;
+		// 4->aggPodStride;
 		int totalEdges = 0;
 		for (int i =0; i < noNodes; i++)
 		{
@@ -730,7 +729,6 @@ public class Graph
 				int cand = rand.nextInt(linksPerLayer);
 				linkCandiates.add(cand);
 			}
-
 		}else if(mode == 3){
 			while(linkCandiates.size()<failCount){
 				int cand = rand.nextInt(linksPerLayer)+linksPerLayer;
@@ -744,6 +742,7 @@ public class Graph
 				index++;
 			}
 		}
+
 		if(ShareBackupNum >0){
 			Map<Integer,Integer> failureGroups = new HashMap<>();
 			Set<Integer> mappedSwitches = new HashSet<>();
@@ -779,7 +778,6 @@ public class Graph
 						outstandingLinks.add(cand);
 				}
 			}
-
 			linkCandiates = outstandingLinks;
 		}
 		Map<Integer, Vector<Integer>> linkToSwitches = new HashMap<>();
@@ -900,14 +898,14 @@ public class Graph
 		return ls;
 	}
 
-	// Send from all servers to some random server
-	public ArrayList TrafficGenAllToOne()
+	// [WDM] modified to all to a random sever in the first pod
+	public ArrayList TrafficGenAllToOnePod(int podSize)
 	{
-		int target = rand.nextInt(totalWeight);
-
 		ArrayList<TrafficPair> ls = new ArrayList<TrafficPair>();
-		for (int svr = 0; svr < totalWeight; svr++)
-			ls.add(new TrafficPair(svr, target));
+		for (int svr = podSize; svr < totalWeight; svr++) {
+            int des = rand.nextInt(podSize);
+		    ls.add(new TrafficPair(svr, des));
+        }
 		System.out.println("ALL-ONE FLOWS = " + ls.size());
 		return ls;
 	}
@@ -963,20 +961,18 @@ public class Graph
 
 		return ls;
 	}
-	//[12-11] modified by WDM to be pod2pod; c should be the pod size
+	//[12-11] modified by WDM to be 2podto 2pod; c should be the pod size
 	public ArrayList TrafficGenManyToMany (int c) {
 		ArrayList<TrafficPair> ls = new ArrayList<TrafficPair>();
 		ArrayList<Integer> ahosts = new ArrayList<Integer> ();
 		ArrayList<Integer> bhosts = new ArrayList<Integer> ();
 		int i,j;
-		for (i=0;i<c;i++){
+		for (i=0;i<2*c;i++){
     		ahosts.add(i);
-    		bhosts.add(i+c);
+    		bhosts.add(i+4*c);
   		}
 		for (i=0;i<ahosts.size();i++){
     		for (j=0;j<bhosts.size();j++){
-//    			if (i == j)
-//    				continue;
     			ls.add(new TrafficPair(ahosts.get(i), bhosts.get(j)));
     		}
   		}
@@ -1427,7 +1423,7 @@ public class Graph
 			ArrayList<TrafficPair> rndmap;
 			if (trafficmode == 0) rndmap = RandomPermutationPairs(svrs);
 			else if (trafficmode == 1) rndmap = TrafficGenAllAll();
-			else if (trafficmode == 2) rndmap = TrafficGenAllToOne();
+			else if (trafficmode == 2) rndmap = TrafficGenAllToOnePod(para);
 			else if (trafficmode == 3) rndmap = TrafficGenCluster(para);
 			else if (trafficmode == 4) rndmap = TrafficGenPartialAllToOne(para);
 			else if (trafficmode == 5) rndmap = TrafficGenPartialCluster(20, para);
@@ -1751,7 +1747,7 @@ public class Graph
 			ArrayList<TrafficPair> rndmap;
 			if (trafficmode == 0) rndmap = RandomPermutationPairs(svrs);
 			else if (trafficmode == 1) rndmap = TrafficGenAllAll();
-			else if (trafficmode == 2) rndmap = TrafficGenAllToOne();
+			else if (trafficmode == 2) rndmap = TrafficGenAllToOnePod(para);
 			else if (trafficmode == 3) rndmap = TrafficGenCluster(para);
 			else if (trafficmode == 4) rndmap = TrafficGenPartialAllToOne(para);
 			else if (trafficmode == 5) rndmap = TrafficGenPartialCluster(20, para);
@@ -2073,7 +2069,6 @@ public class Graph
 			ArrayList<TrafficPair> rndmap;
 			if (trafficmode == 0) rndmap = RandomPermutationPairs(svrs);
 			else if (trafficmode == 1) rndmap = TrafficGenAllAll();
-			else if (trafficmode == 2) rndmap = TrafficGenAllToOne();
 			else rndmap = TrafficGenStride(trafficmode);
 
 			//[wdm-09-26] output could be enormous
@@ -2388,7 +2383,6 @@ public class Graph
 			ArrayList<TrafficPair> rndmap;
 			if (trafficmode == 0) {rndmap = RandomPermutationPairs(svrs); System.out.println("RAND-PERM TRAFFIC ************");}
 			else if (trafficmode == 1) {rndmap = TrafficGenAllAll(); System.out.println("All-all *********************");}
-			else if (trafficmode == 2) rndmap = TrafficGenAllToOne();
 			else if (trafficmode == 3) rndmap = TrafficGenCluster(para);
 			else rndmap = TrafficGenStride(trafficmode);
 
