@@ -24,22 +24,17 @@ public class F10 extends Graph {
         populateAdjacencyList();
         name = "F10";
     }
-    public F10(int K_, int failureMode, double fail_rate){
-        super(K_*K_*5/4);
-        this.K = K_;
-        populateAdjacencyList();
-        name = "F10";
-        failLinks(failureMode,fail_rate,K_);
-    }
 
-    public F10(int K_, int failureMode, int failLinkCount){
+    public F10(int K_, int failureMode, int failedCount, boolean nodeFailure){
         super(K_*K_*5/4);
         this.K = K_;
         populateAdjacencyList();
         name = "F10";
         int totalLinks = K*K*K/2;
-        double failRate = failLinkCount/(double)totalLinks;
-        failLinks(failureMode, failRate, K_);
+        if(nodeFailure)
+            failNodes(failureMode, failedCount, K_);
+        else
+            failLinks(failureMode, failedCount, K_);
     }
 
     // +++++++++++ THIS CONSTRUCTION ROUTINE FOR VANILLA FAT TREE +++++++++++++++++++++++++++++++

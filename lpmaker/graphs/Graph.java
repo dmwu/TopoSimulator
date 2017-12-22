@@ -700,25 +700,62 @@ public class Graph
 	}
 
 	//[WDM] 12-21-2017
-    public void failNodes(int mode, double percentage, int Clo_K){
+    public void failNodes(int mode, int failCount, int Clo_K){
         //mode meaning: 1-Real:
         // 2->randomAgg; 3->randomCore;
         // 4->aggPodStride;
+        if(failCount <=0)
+            return;
 
 	    int aggNodeStarting = Clo_K*Clo_K/2;
 	    int coreNodeStarting = noNodes - Clo_K*Clo_K/4;
+
+	    int aggs = Clo_K*Clo_K/2;
+	    int cores = Clo_K*Clo_K/4;
         Set<Integer> nodeCandiates = new HashSet<>();
         //always fail the first agg node
         nodeCandiates.add(aggNodeStarting);
+        if(mode ==1){
+            while(nodeCandiates.size()<failCount) {
+                int cand = -1;
+                if (rand.nextFloat() <= 0.5) {
+                    cand = aggNodeStarting + rand.nextInt(aggs);
+                } else {
+                    cand = coreNodeStarting + rand.nextInt(cores);
+                }
+                nodeCandiates.add(cand);
+            }
+
+        }else if(mode ==2){
+            while(nodeCandiates.size()<failCount){
+                int cand = aggNodeStarting+rand.nextInt(aggs);
+                nodeCandiates.add(cand);
+            }
+        }else if(mode == 3){
+            while(nodeCandiates.size()<failCount){
+                int cand = coreNodeStarting+rand.nextInt(cores);
+                nodeCandiates.add(cand);
+            }
+        }else if(mode == 4){
+            int index = 0;
+            while(nodeCandiates.size()<failCount){
+                int cand = aggNodeStarting+ index*Clo_K/2+ index/(Clo_K/2);
+                nodeCandiates.add(cand);
+                index++;
+            }
+        }
+        doFailNodes(nodeCandiates);
+
 
     }
 	//modified by wdm 10/12/2017
-	public void failLinks(int mode, double percentage, int Clos_K) {
-        if(percentage < 1e-8)
-            return;
+	public void failLinks(int mode, int failCount, int Clos_K) {
 		//mode meaning: 1-Real:
 		// 2->randomAgg; 3->randomCore;
 		// 4->aggPodStride;
+        if(failCount <=0)
+            return;
+
 		int totalEdges = 0;
 		for (int i =0; i < noNodes; i++)
 		{
@@ -726,7 +763,6 @@ public class Graph
 		}
 		totalEdges /= 2;
 
-		int failCount = (int) (totalEdges*percentage);
 		int linksPerLayer = Clos_K*Clos_K*Clos_K/4;
 		int linksPerPod = Clos_K*Clos_K/4;
 		int switchesPerLayer = Clos_K*Clos_K/2;
@@ -800,32 +836,52 @@ public class Graph
 			}
 			linkCandiates = outstandingLinks;
 		}
-		Map<Integer, Vector<Integer>> linkToSwitches = new HashMap<>();
-
-		for(int cand: linkCandiates){
-			int fromSwitch = cand / (Clos_K / 2);
-			Vector<Integer> connectivity = new Vector<>();
-			for (Link to : adjacencyList[fromSwitch]) {
-				if (to.linkTo > fromSwitch) {
-					connectivity.add(to.linkTo);
-				}
-			}
-			Collections.sort(connectivity);
-			linkToSwitches.put(cand,connectivity);
-		}
-
-		for (int cand : linkCandiates) {
-			int fromSwitch = cand / (Clos_K / 2);
-			int linkOffset = cand % (Clos_K / 2);
-			Vector<Integer> connectivity = linkToSwitches.get(cand);
-			assert(connectivity.size()==Clos_K/2);
-			int toSwitch = connectivity.elementAt(linkOffset);
-			System.out.println("remove link:" + cand + "  " + "from " + fromSwitch + " to " + toSwitch);
-			removeBidirNeighbor(fromSwitch, toSwitch);
-		}
-
+        doFailLinks(linkCandiates,Clos_K);
 	}
+    //[WDM] 12-21-2017
+	private void doFailLinks(Set<Integer> linkCandidates, int Clos_K){
 
+        Map<Integer, Vector<Integer>> linkToSwitches = new HashMap<>();
+
+        for(int cand: linkCandidates){
+            int fromSwitch = cand / (Clos_K / 2);
+            Vector<Integer> connectivity = new Vector<>();
+            for (Link to : adjacencyList[fromSwitch]) {
+                if (to.linkTo > fromSwitch) {
+                    connectivity.add(to.linkTo);
+                }
+            }
+            Collections.sort(connectivity);
+            linkToSwitches.put(cand,connectivity);
+        }
+
+        for (int cand : linkCandidates) {
+            int fromSwitch = cand / (Clos_K / 2);
+            int linkOffset = cand % (Clos_K / 2);
+            Vector<Integer> connectivity = linkToSwitches.get(cand);
+            assert(connectivity.size()==Clos_K/2);
+            int toSwitch = connectivity.elementAt(linkOffset);
+            System.out.println("remove link:" + cand + "  " + "from " + fromSwitch + " to " + toSwitch);
+            removeBidirNeighbor(fromSwitch, toSwitch);
+        }
+
+    }
+    //[WDM] 12-21-2017
+    private void doFailNodes(Set<Integer> nodeCandidates){
+	    for(int i = 0; i < adjacencyList.length;i++) {
+            if (nodeCandidates.contains(i)) {
+                System.out.println("remove node:"+i +" to any other node");
+                adjacencyList[i] = new Vector<Link>();
+                continue;
+            }
+            for (int j = 0; j < adjacencyList[i].size(); j++) {
+                if (nodeCandidates.contains(adjacencyList[i].elementAt(j).intValue())) {
+                    System.out.println("remove node :"+adjacencyList[i].elementAt(j).intValue()+" from:"+i);
+                    adjacencyList[i].remove(j);;
+                }
+            }
+        }
+    }
 
 	public int getShortestLength(int srcTor, int destTor)
 	{
@@ -919,7 +975,7 @@ public class Graph
 	}
 
 	// [WDM] modified to all to a random sever in the first rack
-	public ArrayList TrafficGenAllToOne(int rackSize)
+	public ArrayList TrafficGenAllToOne(int noUse)
 	{
 	    int des = 0;
 		ArrayList<TrafficPair> ls = new ArrayList<TrafficPair>();

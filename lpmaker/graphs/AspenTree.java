@@ -19,18 +19,8 @@ public class AspenTree extends Graph{
             populateAdjacencyList();
             name = "AspenTree";
         }
-        public AspenTree(int K_, int n_, int d_, int failureMode, double fail_rate){
-            super((int) ( K_ * K_ / 2 * (n_- 0.5) ) );
-            this.K = K_;
-            this.N = n_;
-            this.D = d_;
-            this.S = (int) (Math.pow(K, N-1)/(Math.pow(2, N-2) * D)); //S must be K*K/2
-            populateAdjacencyList();
-            name = "AspenTree";
-            failLinks(failureMode, fail_rate, K_);
-        }
 
-        public AspenTree(int K_, int n_, int d_, int failureMode, int failedLinkCount){
+        public AspenTree(int K_, int n_, int d_, int failureMode, int failedCount, boolean nodeFailure){
             super((int) ( K_ * K_ / 2 * (n_- 0.5) ) );
             this.K = K_;
             this.N = n_;
@@ -39,8 +29,10 @@ public class AspenTree extends Graph{
             populateAdjacencyList();
 
             int totalLinks = 3*K*K*K/4;
-            double failRate = failedLinkCount/(double) totalLinks;
-            failLinks(failureMode,failRate, K_);
+            if(nodeFailure)
+                failNodes(failureMode, failedCount, K_);
+            else
+                failLinks(failureMode, failedCount, K_);
 
         }
 

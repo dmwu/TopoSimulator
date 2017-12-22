@@ -26,24 +26,18 @@ public class FatTreeSigcomm extends Graph{
 		populateAdjacencyList();
 		name = "fat";
 	}
-	public FatTreeSigcomm(int K_,  int failureMode, double fail_rate, int backups){
-		super(K_*K_*5/4);
-		this.K = K_;
-		populateAdjacencyList();
-		name = "fat";
-		this.ShareBackupNum = backups;
-		failLinks(failureMode,fail_rate, K_);
-	}
 
-	public FatTreeSigcomm(int K_, int failureMode, int failLinkCount, int backups){
+	public FatTreeSigcomm(int K_, int failureMode, int failCount, int backups, boolean nodeFailure){
 		super(K_*K_*5/4);
 		this.K = K_;
 		populateAdjacencyList();
 		name = "fat";
 		this.ShareBackupNum = backups;
 		int totalLinks = K*K*K/2;
-		double failRate = failLinkCount/(double)totalLinks;
-		failLinks(failureMode,failRate, K_);
+		if(nodeFailure)
+			failNodes(failureMode, failCount, K_);
+		else
+			failLinks(failureMode, failCount, K_);
 	}
 
 	/*public ArrayList TrafficGenAllAll()
