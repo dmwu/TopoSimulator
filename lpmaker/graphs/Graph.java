@@ -718,23 +718,28 @@ public class Graph
 		assert(totalEdges == 2*linksPerLayer);
 
 		Set<Integer> linkCandiates = new HashSet<>();
+		//link 0 is fixed to be a failulre for M2M and one2one
 		if (mode == 1) {
+		    linkCandiates.add(0);
 			while(linkCandiates.size()<failCount){
 				int cand = rand.nextInt(linksPerLayer);
 				cand = rand.nextFloat()<0.63?cand:cand+linksPerLayer;
 				linkCandiates.add(cand);
 			}
 		}else if(mode == 2) {
+            linkCandiates.add(0);
 			while(linkCandiates.size()<failCount){
 				int cand = rand.nextInt(linksPerLayer);
 				linkCandiates.add(cand);
 			}
 		}else if(mode == 3){
+            linkCandiates.add(0);
 			while(linkCandiates.size()<failCount){
 				int cand = rand.nextInt(linksPerLayer)+linksPerLayer;
 				linkCandiates.add(cand);
 			}
 		}else if(mode == 4){
+            linkCandiates.add(0);
 			int index = 0;
 			while(linkCandiates.size()<failCount){
 				int cand = (index%Clos_K)*linksPerPod+index/Clos_K;
@@ -898,12 +903,12 @@ public class Graph
 		return ls;
 	}
 
-	// [WDM] modified to all to a random sever in the first pod
-	public ArrayList TrafficGenAllToOnePod(int podSize)
+	// [WDM] modified to all to a random sever in the first rack
+	public ArrayList TrafficGenAllToOne(int rackSize)
 	{
 		ArrayList<TrafficPair> ls = new ArrayList<TrafficPair>();
-		for (int svr = podSize; svr < totalWeight; svr++) {
-            int des = rand.nextInt(podSize);
+		for (int svr = rackSize; svr < totalWeight; svr++) {
+            int des = rand.nextInt(rackSize);
 		    ls.add(new TrafficPair(svr, des));
         }
 		System.out.println("ALL-ONE FLOWS = " + ls.size());
@@ -1423,7 +1428,7 @@ public class Graph
 			ArrayList<TrafficPair> rndmap;
 			if (trafficmode == 0) rndmap = RandomPermutationPairs(svrs);
 			else if (trafficmode == 1) rndmap = TrafficGenAllAll();
-			else if (trafficmode == 2) rndmap = TrafficGenAllToOnePod(para);
+			else if (trafficmode == 2) rndmap = TrafficGenAllToOne(para);
 			else if (trafficmode == 3) rndmap = TrafficGenCluster(para);
 			else if (trafficmode == 4) rndmap = TrafficGenPartialAllToOne(para);
 			else if (trafficmode == 5) rndmap = TrafficGenPartialCluster(20, para);
@@ -1747,7 +1752,7 @@ public class Graph
 			ArrayList<TrafficPair> rndmap;
 			if (trafficmode == 0) rndmap = RandomPermutationPairs(svrs);
 			else if (trafficmode == 1) rndmap = TrafficGenAllAll();
-			else if (trafficmode == 2) rndmap = TrafficGenAllToOnePod(para);
+			else if (trafficmode == 2) rndmap = TrafficGenAllToOne(para);
 			else if (trafficmode == 3) rndmap = TrafficGenCluster(para);
 			else if (trafficmode == 4) rndmap = TrafficGenPartialAllToOne(para);
 			else if (trafficmode == 5) rndmap = TrafficGenPartialCluster(20, para);

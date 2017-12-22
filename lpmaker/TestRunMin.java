@@ -15,7 +15,7 @@ import lpmaker.graphs.*;
  */
 public class TestRunMin {
     public static void main(String args[]) throws IOException {
-        int k = 24;
+        int k = 16;
         int topo = Integer.parseInt(args[0]);
         int trafficMode = Integer.parseInt(args[1]);
         int failureMode = Integer.parseInt(args[2]);
