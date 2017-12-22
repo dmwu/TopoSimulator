@@ -906,9 +906,9 @@ public class Graph
 	// [WDM] modified to all to a random sever in the first rack
 	public ArrayList TrafficGenAllToOne(int rackSize)
 	{
+	    int des = 0;
 		ArrayList<TrafficPair> ls = new ArrayList<TrafficPair>();
-		for (int svr = rackSize; svr < totalWeight; svr++) {
-            int des = rand.nextInt(rackSize);
+		for (int svr = 0; svr < totalWeight; svr++) {
 		    ls.add(new TrafficPair(svr, des));
         }
 		System.out.println("ALL-ONE FLOWS = " + ls.size());
