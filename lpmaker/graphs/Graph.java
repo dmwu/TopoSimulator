@@ -699,8 +699,23 @@ public class Graph
 		adjacencyList[j].add(new Link(i));
 	}
 
+	//[WDM] 12-21-2017
+    public void failNodes(int mode, double percentage, int Clo_K){
+        //mode meaning: 1-Real:
+        // 2->randomAgg; 3->randomCore;
+        // 4->aggPodStride;
+
+	    int aggNodeStarting = Clo_K*Clo_K/2;
+	    int coreNodeStarting = noNodes - Clo_K*Clo_K/4;
+        Set<Integer> nodeCandiates = new HashSet<>();
+        //always fail the first agg node
+        nodeCandiates.add(aggNodeStarting);
+
+    }
 	//modified by wdm 10/12/2017
 	public void failLinks(int mode, double percentage, int Clos_K) {
+        if(percentage < 1e-8)
+            return;
 		//mode meaning: 1-Real:
 		// 2->randomAgg; 3->randomCore;
 		// 4->aggPodStride;
@@ -720,7 +735,7 @@ public class Graph
 		Set<Integer> linkCandiates = new HashSet<>();
 		//link 0 is fixed to be a failulre for M2M and one2one
 		if (mode == 1) {
-		    linkCandiates.add(0);
+            linkCandiates.add(0);
 			while(linkCandiates.size()<failCount){
 				int cand = rand.nextInt(linksPerLayer);
 				cand = rand.nextFloat()<0.63?cand:cand+linksPerLayer;
