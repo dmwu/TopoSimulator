@@ -744,6 +744,23 @@ public class Graph
                 index++;
             }
         }
+        if(ShareBackupNum >0){
+            Map<Integer,Integer> failureGroups = new HashMap<>();
+            Set<Integer> outstandingNodes = new HashSet<>();
+            for(int node:nodeCandiates){
+                int gid = node/(Clo_K/2);
+                if(failureGroups.containsKey(gid))
+                    failureGroups.put(gid, failureGroups.get(gid) + 1);
+                else{
+                    failureGroups.put(gid,1);
+                }
+                if(failureGroups.get(gid) > ShareBackupNum)
+                    outstandingNodes.add(node);
+
+            }
+            nodeCandiates = outstandingNodes;
+
+        }
         doFailNodes(nodeCandiates);
 
 
@@ -753,6 +770,9 @@ public class Graph
 		//mode meaning: 1-Real:
 		// 2->randomAgg; 3->randomCore;
 		// 4->aggPodStride;
+        //5 multicast root
+        //6 multicast pod
+        //7 multicast all
         if(failCount <=0)
             return;
 
@@ -789,16 +809,29 @@ public class Graph
 				int cand = rand.nextInt(linksPerLayer)+linksPerLayer;
 				linkCandiates.add(cand);
 			}
-		}else if(mode == 4){
+		}else if(mode == 4) {
             linkCandiates.add(0);
-			int index = 0;
-			while(linkCandiates.size()<failCount){
-				int cand = (index%Clos_K)*linksPerPod+index/Clos_K;
-				linkCandiates.add(cand);
-				index++;
-			}
-		}
-
+            int index = 0;
+            while (linkCandiates.size() < failCount) {
+                int cand = (index % Clos_K) * linksPerPod + index / Clos_K;
+                linkCandiates.add(cand);
+                index++;
+            }
+        }else if(mode ==5){
+		    linkCandiates.add(0);
+        }else if(mode == 6){
+            for(int i = 0; i< Clos_K/2;i++){
+                linkCandiates.add(i*Clos_K/2);
+            }
+        }else if(mode == 7){
+            for(int pod = 0; pod<Clos_K;pod++)
+                for(int i = 0; i< Clos_K/2;i++){
+                    linkCandiates.add(linksPerPod*pod+i*Clos_K/2);
+                }
+            for(int i = 0; i<Clos_K;i++){
+                linkCandiates.add(linksPerLayer+linksPerPod*i);
+            }
+        }
 		if(ShareBackupNum >0){
 			Map<Integer,Integer> failureGroups = new HashMap<>();
 			Set<Integer> mappedSwitches = new HashSet<>();
@@ -817,7 +850,7 @@ public class Graph
 					if(failureGroups.containsKey(gid1))
 						failureGroups.put(gid1, failureGroups.get(gid1) + 1);
 					else{
-						failureGroups.put(gid1,0);
+						failureGroups.put(gid1,1);
 					}
 					if(failureGroups.get(gid1) > ShareBackupNum)
 						outstandingLinks.add(cand);
@@ -828,7 +861,7 @@ public class Graph
 					if(failureGroups.containsKey(gid2))
 						failureGroups.put(gid2, failureGroups.get(gid2) + 1);
 					else{
-						failureGroups.put(gid2,0);
+						failureGroups.put(gid2,1);
 					}
 					if(failureGroups.get(gid2) > ShareBackupNum)
 						outstandingLinks.add(cand);

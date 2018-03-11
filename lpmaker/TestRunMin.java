@@ -15,7 +15,7 @@ import lpmaker.graphs.*;
  */
 public class TestRunMin {
     public static void main(String args[]) throws IOException {
-        int k = 16;
+        int k = 4;
         boolean NODE_FAILURE = true;
 
         int topo = Integer.parseInt(args[0]);
