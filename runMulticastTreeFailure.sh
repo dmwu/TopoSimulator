@@ -16,11 +16,11 @@ for trafficMode in 0
         done
         rm ./*.lp
 
-        for failureMode in 5 6 7
+        for failureMode in 5 6 7 8
             do
             for failCount in 1
                 do
-                for trial in 1 2 3
+                for trial in 1 2 3 4
                     do
                     java lpmaker.TestMulticastTree "$topo" "$trafficMode" "$failureMode" "$failCount" "$trial"
                 done

@@ -831,7 +831,17 @@ public class Graph
             for(int i = 0; i<Clos_K;i++){
                 linkCandiates.add(linksPerLayer+linksPerPod*i);
             }
-        }
+        }else if(mode == 8){
+            for(int pod = 0; pod<Clos_K;pod++)
+                for(int i = 0; i< Clos_K/2;i++){
+                    linkCandiates.add(linksPerPod*pod+i*Clos_K/2);
+                    linkCandiates.add(linksPerPod*pod+i*Clos_K/2+1);
+                }
+            for(int i = 0; i<Clos_K;i++){
+                linkCandiates.add(linksPerLayer+linksPerPod*i);
+                linkCandiates.add(linksPerLayer+linksPerPod*i+Clos_K/2);
+            }
+		}
 		if(ShareBackupNum >0){
 			Map<Integer,Integer> failureGroups = new HashMap<>();
 			Set<Integer> mappedSwitches = new HashSet<>();
