@@ -38,7 +38,7 @@ public class TestMulticastTree {
         System.out.println("Topo:" + topo + " failureMode:" + failureMode + " failCount:" + failCount + " trial:" + trial);
         if (topo == 0) {
             FatTreeSigcomm fts = new FatTreeSigcomm(k, failureMode, failCount, 0, false);
-            fts.PrintGraphforMCFFairCondensedAverage("fattree_k" + k + "_traffic_" + traffic +
+            fts.PrintGraphforMCFFairCondensed("fattree_k" + k + "_traffic_" + traffic +
                     "_failMode" + failureMode + "_failureCount" + failCount + "_" + trial + ".lp", trafficMode, para);
         }
     }

@@ -38,7 +38,7 @@ for trafficMode in 0
         do
         echo "$entry"
         line=$(head -n 1 "$entry")
-        echo -e "${entry} ${line}" >> "newMulticast_Avg${trafficMode}.txt"
+        echo -e "${entry} ${line}" >> "newMulticast_Min${trafficMode}.txt"
     done
     rm ./*.lp.sol
 done
