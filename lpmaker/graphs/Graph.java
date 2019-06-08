@@ -773,6 +773,8 @@ public class Graph
         //5 multicast root
         //6 multicast pod
         //7 multicast all
+	//8 two multicast trees all
+	//9 three links per ToR (reserved for Shufflecast) added by sushovan (6/6/19) 
         if(failCount <=0)
             return;
 
@@ -841,7 +843,15 @@ public class Graph
                 linkCandiates.add(linksPerLayer+linksPerPod*i);
                 linkCandiates.add(linksPerLayer+linksPerPod*i+Clos_K/2);
             }
-		}
+	}else if(mode == 9){
+	   for(int pod = 0; pod<Clos_K;pod++)
+                for(int i = 0; i< Clos_K/2;i++){
+                    linkCandiates.add(linksPerPod*pod+i*Clos_K/2);
+                    linkCandiates.add(linksPerPod*pod+i*Clos_K/2+1);
+		    linkCandiates.add(linksPerPod*pod+i*Clos_K/2+2);
+                }
+
+	}
 		if(ShareBackupNum >0){
 			Map<Integer,Integer> failureGroups = new HashMap<>();
 			Set<Integer> mappedSwitches = new HashSet<>();
