@@ -1516,7 +1516,7 @@ public class Graph
 	// If slack is set to 3, flows can not deviate more than 2 hops from their shortest path distance
 	private boolean isFlowZero(FlowID flowID, int linkFrom, int linkTo)
 	{
-		int SLACK = 4;
+		int SLACK = 3;
 		int srcSw = flowID.srcSwitch;
 		int destSw = flowID.dstSwitch;
 
@@ -1602,6 +1602,7 @@ public class Graph
 				//System.out.println("fromsw = " + fromsw + " tosw = " + tosw);
 				if (switchLevelMatrix[fromsw][tosw] == 0) nCommodities ++;
 				switchLevelMatrix[fromsw][tosw] ++;
+				//System.out.println("from "+fromsw+ " to "+tosw+ " load "+switchLevelMatrix[fromsw][tosw]+"\n");
 			}
 
 
