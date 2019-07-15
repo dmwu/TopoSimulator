@@ -8,16 +8,6 @@ package lpmaker.graphs;
 import java.util.*;
 import java.io.*;
 
-class TrafficPair {
-	public int from;
-	public int to;
-
-	TrafficPair(int a, int b) {
-		from = a;
-		to = b;
-	}
-}
-
 public class Graph
 {
 	public static final int INFINITY = 999999999;
@@ -1060,6 +1050,19 @@ public class Graph
 		
 	}
 
+	public ArrayList TrafficGenRackHotspot(int seversPerRack){
+		//all sources are in the first rack
+		int sources = seversPerRack/2;
+		ArrayList<TrafficPair> ls = new ArrayList<TrafficPair>();
+		for (int svr = 0; svr < sources; svr++){
+			ls.add(new TrafficPair(svr, svr+seversPerRack));
+			ls.add(new TrafficPair(svr, svr+2*seversPerRack));
+		}
+		System.out.println("Hotspot rack flows = "+ls.size());
+		return ls;
+
+	}
+
 	public ArrayList TrafficGenCluster(int n) {
 		ArrayList<TrafficPair> ls = new ArrayList<TrafficPair>();
 		int clusterNum = totalWeight / n;
@@ -1081,21 +1084,22 @@ public class Graph
 		return ls;
 	}
 	//[12-11] modified by WDM to be 2podto 2pod; c should be the pod size
+	//[07-15-2019] modified by WDM to be rack to rack for RDC, c should be the rack size
 	public ArrayList TrafficGenManyToMany (int c) {
 		ArrayList<TrafficPair> ls = new ArrayList<TrafficPair>();
 		ArrayList<Integer> ahosts = new ArrayList<Integer> ();
 		ArrayList<Integer> bhosts = new ArrayList<Integer> ();
 		int i,j;
-		for (i=0;i<2*c;i++){
+		for (i=0;i<c;i++){
     		ahosts.add(i);
-    		bhosts.add(i+4*c);
+    		bhosts.add(i+c);
   		}
 		for (i=0;i<ahosts.size();i++){
     		for (j=0;j<bhosts.size();j++){
     			ls.add(new TrafficPair(ahosts.get(i), bhosts.get(j)));
     		}
   		}
-		System.out.println("pod2pod FLOWS = " + ls.size());
+		System.out.println("rack2rack FLOWS = " + ls.size());
   		return ls;
 	}
 
@@ -1852,37 +1856,15 @@ public class Graph
 		}
 	}
 
-	public void PrintGraphforMCFFairCondensedAverage(String filename, int trafficmode, int para)
-	{
-
+	public void PrintGraphforMCFFairCondensedAverage(String filename, ArrayList<TrafficPair> trafficPattern){
 		modifiedFloydWarshall();
-		int r= noNodes; //# of ToR switches
+		int r= noNodes; //# of switches
 		int svrs=totalWeight;
 
 		int nflowlet = 1;
+		ArrayList<TrafficPair> rndmap = trafficPattern;
 		try
 		{
-
-			// traffic-mode: 0 = randPerm; 1 = all-all; 2 = all-to-one; Any higher n means stride(n)
-			ArrayList<TrafficPair> rndmap;
-			if (trafficmode == 0) rndmap = RandomPermutationPairs(svrs);
-			else if (trafficmode == 1) rndmap = TrafficGenAllAll();
-			else if (trafficmode == 2) rndmap = TrafficGenAllToOne(para);
-			else if (trafficmode == 3) rndmap = TrafficGenCluster(para);
-			else if (trafficmode == 4) rndmap = TrafficGenPartialAllToOne(para);
-			else if (trafficmode == 5) rndmap = TrafficGenPartialCluster(20, para);
-			else if (trafficmode == 6) rndmap = TrafficGenClusterAllToOne(para);
-			else if (trafficmode == 7) rndmap = TrafficGenClusterNoLocality(para);
-			else if (trafficmode == 8) rndmap = TrafficGenClusterNoLocalityAllToOne(para);
-			else if (trafficmode == 9) rndmap = TrafficGenClusterLocalNoLocality(20, para);
-			else if (trafficmode == 10) rndmap = TrafficGenClusterLocalNoLocalityPartial(20, para, 0.2);
-			else if (trafficmode == 11) rndmap = TrafficGenStride(para);
-			else if (trafficmode == 12) rndmap = TrafficDefinedFlow();
-			else if (trafficmode == 13) rndmap = TrafficGenHotspot(para);
-			else if (trafficmode == 14) rndmap = TrafficGenLocalHotspot(para);
-			else if (trafficmode == 15) rndmap = TrafficGenManyToMany(para);
-			else if (trafficmode == 16) rndmap = TrafficGenLocalManyToMany(para);
-			else rndmap = TrafficGenStride(para);
 
 			/* [wdm-09-26]The output could be enormous, suppress it for now*/
 			/*
@@ -1890,7 +1872,7 @@ public class Graph
 				TrafficPair curnt = rndmap.get(i);
 				System.out.println("FLOW " + curnt.from + "-->" + curnt.to);
 			}*/
-			
+
 			FileWriter fstream = new FileWriter(filename);
 			BufferedWriter out = new BufferedWriter(fstream);
 
@@ -1928,7 +1910,7 @@ public class Graph
 				if (fromsw == tosw) continue;
 				//System.out.println("fromsw = " + fromsw + " tosw = " + tosw);
 				if (switchLevelMatrix[fromsw][tosw] == 0) nCommodities ++;
-				switchLevelMatrix[fromsw][tosw] ++;
+				switchLevelMatrix[fromsw][tosw]++;
 			}
 
 
@@ -1946,7 +1928,7 @@ public class Graph
 						numFlows++;
 			FlowID[] allFlowIDs = new FlowID[numFlows];
 			int curfID=0;
-			
+
 			for (int f = 0; f < noNodes; f++)
 				for (int t = 0; t < noNodes; t++)
 					if(switchLevelMatrix[f][t]>0)
@@ -1955,14 +1937,14 @@ public class Graph
 						//output1.write(curfID + " " + f + " " + t + "\n");
 						curfID++;
 					}
-			
+
 			for (int f = 0; f < noNodes; f++)
 				for (int j=0; j<adjacencyList[f].size(); j++) {  //for each out link of f = (f,j)
 					String lType = "";
 
 					if (adjacencyList[f].elementAt(j).linkcapacity > 1) lType = "H-H";
 					else lType += adjacencyList[f].size() + "-" + adjacencyList[adjacencyList[f].elementAt(j).intValue()].size();
-				
+
 					//output2.write(f + "_" + adjacencyList[f].elementAt(j).intValue() + " " + adjacencyList[f].elementAt(j).linkcapacity + " " + adjacencyList[f].size() + " " + lType + "\n");
 				}
 			//output2.close();
@@ -1971,89 +1953,40 @@ public class Graph
 			//boolean fair = true;
 			int fid=0;
 			String constraint = "";
-			if (fair) {
-				//< Objective
-				out.write("Maximize \n");
-				out.write("obj: ");
-				String objective = "K";
-				out.write(objective);
-				//<Constraints of Type 0: fairness i.e. flow >= K
-				out.write("\n\nSUBJECT TO \n");
-
-				out.write("cxx: ");
-				for (int fn = 0; fn < numFlows; fn++) {
-					out.write("-K" + fn + " ");
-				}
-				out.write("+ " + numFlows + " K <= 0\n");
-
-				objective += ")/" + numFlows;
-
-				out.write("\\Type 0: Flow >= K\n");
-				System.out.println(new Date() + ": Starting part 0");
-				for (int f = 0; f < noNodes; f++)
-				{
-					for (int t = 0; t < noNodes; t++)
-					{
-						if(switchLevelMatrix[f][t]>0)	  //for each flow fid with source f
-						{
-							constraint = "c0_" + fid + ": ";
-							//System.out.println("CHECK FLOW =========== " + fid + " " + f + " " + t);
-
-							int writeCons = 0;
-							for(int j=0; j<adjacencyList[f].size(); j++)   //for each out link of f = (f,j)
-							{
-								if (!isFlowZero(allFlowIDs[fid], f, adjacencyList[f].elementAt(j).intValue()))
-								{
-									constraint += "-f_" + fid + "_" + f + "_" + adjacencyList[f].elementAt(j).intValue() + " ";
-									writeCons = 1;
-								}
-								//if(j!=adjacencyList[f].size()-1) constraint += "- ";
-							}
-							if (writeCons == 1)
-							{
-								constraint += " + " + switchLevelMatrix[f][t] + " K" + fid + " <= 0\n";
-								out.write(constraint);
-							}
-							fid++;
-						}
-					}
-				}
-				//>
-			}
 
 			//>
-			else { // no fairness constraints -- max total throughput
-				//< Objective
-                out.write("Maximize \n");
-                out.write("obj: ");
-				fid = 0;
-                String objective = "";
-                for (int f = 0; f < noNodes; f++) {
-                    for (int t = 0; t < noNodes; t++) {
-                        if(switchLevelMatrix[f][t]>0)   { //for each flow fid with source f
-                            for(int j=0; j<adjacencyList[f].size(); j++) { //for each out link of f = (f,j)
-                                objective += "f_" + fid + "_" + f + "_" + adjacencyList[f].elementAt(j).intValue() + " ";
-                                if(j!=adjacencyList[f].size()-1)
-                                    objective += "+ ";
-                            }
-                            if(fid != commodityIndex-1)
-                                objective += "+ ";
-                            else
-                                objective += "\n";
-                            fid++;
-                        }
-                    }
-                }
-                out.write(objective);
-				out.write("\n\nSUBJECT TO \n\\Type 0: Flow >= K\n");
-	                        //>
+			// no fairness constraints -- max total throughput
+			//< Objective
+			out.write("Maximize \n");
+			out.write("obj: ");
+			fid = 0;
+			String objective = "";
+			for (int f = 0; f < noNodes; f++) {
+				for (int t = 0; t < noNodes; t++) {
+					if(switchLevelMatrix[f][t]>0)   { //for each flow fid with source f
+						for(int j=0; j<adjacencyList[f].size(); j++) { //for each out link of f = (f,j)
+							objective += "f_" + fid + "_" + f + "_" + adjacencyList[f].elementAt(j).intValue() + " ";
+							if(j!=adjacencyList[f].size()-1)
+								objective += "+ ";
+						}
+						if(fid != commodityIndex-1)
+							objective += "+ ";
+						else
+							objective += "\n";
+						fid++;
+					}
+				}
 			}
+			out.write(objective);
+			out.write("\n\nSUBJECT TO \n\\Type 0: Flow >= K\n");
+			//>
+
 
 			//<Constraints of Type 1: Load on link <= max_load
 			out.write("\n\\Type 1: Load on link <= max_load\n");
 			System.out.println(new Date() + ": Starting part 1");
 			constraint = "";
-			int strCapacity = 25*commodityIndex;
+			int strCapacity = commodityIndex;
 			for(int i=0; i<noNodes; i++)
 			{
 				for(int j=0; j<adjacencyList[i].size(); j++)
@@ -2172,6 +2105,36 @@ public class Graph
 			System.err.println("PrintGraphforMCFFairCondensed Error: " + e.getMessage());
 			e.printStackTrace();
 		}
+
+	}
+
+	public void PrintGraphforMCFFairCondensedAverage(String filename, int trafficmode, int para)
+	{
+		int svrs=totalWeight;
+		ArrayList<TrafficPair> rndmap = new ArrayList<TrafficPair>();
+
+		// traffic-mode: 0 = randPerm; 1 = all-all; 2 = all-to-one; Any higher n means stride(n)
+		if (trafficmode == 0) rndmap = RandomPermutationPairs(svrs);
+		else if (trafficmode == 1) rndmap = TrafficGenAllAll();
+		else if (trafficmode == 2) rndmap = TrafficGenAllToOne(para);
+		else if (trafficmode == 3) rndmap = TrafficGenCluster(para);
+		else if (trafficmode == 4) rndmap = TrafficGenPartialAllToOne(para);
+		else if (trafficmode == 5) rndmap = TrafficGenPartialCluster(20, para);
+		else if (trafficmode == 6) rndmap = TrafficGenClusterAllToOne(para);
+		else if (trafficmode == 7) rndmap = TrafficGenClusterNoLocality(para);
+		else if (trafficmode == 8) rndmap = TrafficGenClusterNoLocalityAllToOne(para);
+		else if (trafficmode == 9) rndmap = TrafficGenClusterLocalNoLocality(20, para);
+		else if (trafficmode == 10) rndmap = TrafficGenClusterLocalNoLocalityPartial(20, para, 0.2);
+		else if (trafficmode == 11) rndmap = TrafficGenStride(para);
+		else if (trafficmode == 12) rndmap = TrafficDefinedFlow();
+		else if (trafficmode == 13) rndmap = TrafficGenHotspot(para);
+		else if (trafficmode == 14) rndmap = TrafficGenLocalHotspot(para);
+		else if (trafficmode == 15) rndmap = TrafficGenManyToMany(para);
+		else if (trafficmode == 16) rndmap = TrafficGenLocalManyToMany(para);
+		else if (trafficmode == 17) rndmap = TrafficGenRackHotspot(para);
+		else rndmap = TrafficGenStride(para);
+
+		PrintGraphforMCFFairCondensedAverage(filename, rndmap);
 	}
 
 	// Uses a path-length based heuristic to determine that a certain flow on a certain link will be 0, so no need to factor in LP etc.
