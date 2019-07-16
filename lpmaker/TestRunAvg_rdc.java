@@ -1,6 +1,5 @@
 package lpmaker;
 
-
         import java.security.SecureRandom;
         import java.util.*;
         import java.io.*;
@@ -76,7 +75,14 @@ public class TestRunAvg_rdc {
                 filename,
                 "16"
         };
-        Runtime.getRuntime().exec(cmd);
+        try {
+            Process ps = Runtime.getRuntime().exec(cmd);
+            int exitCode = ps.waitFor();
+        }
+        catch (InterruptedException e) {
+            System.out.println("Exception while recording video.");
+            e.printStackTrace();
+        }
 
         String convertedFile = filename+".mapped";
 

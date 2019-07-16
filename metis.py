@@ -3,6 +3,7 @@ import nxmetis
 import numpy as np
 import Queue
 import sys,time, operator,random
+edges = []
 
 def generateGraphFromFile(filename):
     G = nx.Graph()
@@ -11,6 +12,7 @@ def generateGraphFromFile(filename):
             nodePair = line.strip().split(',')
             a = int(nodePair[0])
             b =  int(nodePair[1])
+            edges.append((a, b))
             if a != b:
                 if(G.has_edge(a, b)):
                     G[a][b]['weight'] += 1
@@ -35,8 +37,7 @@ if __name__ == "__main__":
             newID += 1
 
     with open(sys.argv[1]+'.mapped','w') as ff:
-        edges = [e for e in g.edges()]
         for (a,b) in edges:
-            for i in range(g[a][b]['weight']):
-                ff.write(str(mapping[a])+','+str(mapping[b])+'\n')
+            ff.write(str(mapping[a])+','+str(mapping[b])+'\n')
+
     ff.close()
