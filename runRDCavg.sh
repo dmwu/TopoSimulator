@@ -5,7 +5,7 @@ rm ./*.lp
 #for topo in 1 2 3
 for trafficMode in 0 11 15 17
     do
-    for trial in 0 1 2
+    for trial in 0
         do
         java lpmaker.TestRunAvg_rdc "$trafficMode" "$trial"
         for entry in ./*.lp

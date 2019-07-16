@@ -12,8 +12,8 @@ package lpmaker;
 
 public class TestRunAvg_rdc {
     public static void main(String args[]) throws IOException {
-        int numToRs = 4;
-        int serversPerToR = 8;
+        int numToRs = 16;
+        int serversPerToR = 32;
         int osRatio = 4;
         int trafficMode = Integer.parseInt(args[0]);
         int trial = Integer.parseInt(args[1]);
@@ -74,7 +74,7 @@ public class TestRunAvg_rdc {
                 "python",
                 "metis.py",
                 filename,
-                "4"
+                "16"
         };
         Runtime.getRuntime().exec(cmd);
 
