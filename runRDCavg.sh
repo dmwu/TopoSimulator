@@ -15,7 +15,7 @@ for trafficMode in 0 11 15 17
         done
         rm ./*.lp
     done
-
+    truncate -s 0 "finalAvg_TP${trafficMode}.txt"
     for entry in ./*.lp.sol
         do
         echo "$entry"
