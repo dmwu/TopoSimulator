@@ -31,7 +31,7 @@ public class TestRunAvg_rdc {
             trafficName="stride";
             trafficPattern = static_rdc.TrafficGenStride(para);
         }else if(trafficMode == 15){
-            //make it rack to rack
+            //make it 2rack to 2rack
             para = serversPerToR;
             trafficName = "m2m";
             trafficPattern = static_rdc.TrafficGenManyToMany(para);
@@ -39,6 +39,10 @@ public class TestRunAvg_rdc {
         }else if(trafficMode == 17){
             trafficName = "rackHotspot";
             trafficPattern = static_rdc.TrafficGenRackHotspot(serversPerToR);
+
+        }else if(trafficMode == 1){
+            trafficName = "all2all";
+            trafficPattern = static_rdc.TrafficGenAllAll();
         }
 
         String filename = "TrafficPattern:"+trafficName+"_osRatio:" + osRatio + "_trial:"+trial;

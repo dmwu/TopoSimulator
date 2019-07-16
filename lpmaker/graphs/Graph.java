@@ -1052,7 +1052,7 @@ public class Graph
 
 	public ArrayList TrafficGenRackHotspot(int seversPerRack){
 		//all sources are in the first rack
-		int sources = seversPerRack/2;
+		int sources = seversPerRack;
 		ArrayList<TrafficPair> ls = new ArrayList<TrafficPair>();
 		for (int svr = 0; svr < sources; svr++){
 			ls.add(new TrafficPair(svr, svr+seversPerRack));
