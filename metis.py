@@ -28,7 +28,6 @@ if __name__ == "__main__":
     opts.contig = False
     (objVal, parts) = nxmetis.partition(g, int(sys.argv[2]), options=opts)
     newID = 0
-    print parts
     mapping={}
     for x in parts:
         for y in x:
@@ -36,8 +35,7 @@ if __name__ == "__main__":
             newID += 1
 
     with open(sys.argv[1]+'.mapped','w') as ff:
-        edges = [e for e in g.edges_iter()]
-        print(len(edges))
+        edges = [e for e in g.edges()]
         for (a,b) in edges:
             for i in range(g[a][b]['weight']):
                 ff.write(str(mapping[a])+','+str(mapping[b])+'\n')
