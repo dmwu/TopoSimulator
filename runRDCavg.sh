@@ -19,7 +19,7 @@ for trafficMode in 0 11 15 17
     for entry in ./*.lp.sol
         do
         echo "$entry"
-        line=$(head -n 1 "$entry")
+        line=$(head -n 2 "$entry")
         echo -e "${entry} ${line}" >> "finalAvg_TP${trafficMode}.txt"
     done
     #rm ./*.lp.sol
