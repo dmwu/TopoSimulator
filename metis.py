@@ -5,8 +5,9 @@ import Queue
 import sys,time, operator,random
 edges = []
 
-def generateGraphFromFile(filename):
+def generateGraphFromFile(filename, numNodes):
     G = nx.Graph()
+    G.add_nodes_from(range(numNodes))
     with open(filename, 'r') as ff:
         for line in ff:
             nodePair = line.strip().split(',')
@@ -24,12 +25,14 @@ def generateGraphFromFile(filename):
 
 
 if __name__ == "__main__":
-    g = generateGraphFromFile(sys.argv[1])
+    totalNumNodes = int(sys.argv[3])
+    g = generateGraphFromFile(sys.argv[1], totalNumNodes)
     opts = nxmetis.types.MetisOptions()
     opts.objtype = nxmetis.enums.MetisObjType.cut
     opts.contig = False
     (objVal, parts) = nxmetis.partition(g, int(sys.argv[2]), options=opts)
     newID = 0
+    print (parts)
     mapping={}
     for x in parts:
         for y in x:

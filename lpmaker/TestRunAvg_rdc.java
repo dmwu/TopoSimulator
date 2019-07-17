@@ -1,5 +1,4 @@
 package lpmaker;
-
         import java.security.SecureRandom;
         import java.util.*;
         import java.io.*;
@@ -19,7 +18,7 @@ public class TestRunAvg_rdc {
         int para = 0;
         String trafficName = new String();
         RDC static_rdc = new RDC(numToRs,serversPerToR, osRatio);
-
+        RDC rdc = new RDC(numToRs, serversPerToR, osRatio);
         ArrayList<TrafficPair> trafficPattern = null;
         if(trafficMode == 0){
             para = numToRs * serversPerToR;
@@ -48,17 +47,17 @@ public class TestRunAvg_rdc {
         String filename = "TrafficPattern:"+trafficName+"_osRatio:" + osRatio + "_trial:"+trial;
         System.out.println(filename);
 
-        ArrayList<TrafficPair>  convertedTP = convertedTraffic(trafficPattern, trafficName);
+        ArrayList<TrafficPair>  convertedTP = convertedTraffic(trafficPattern, trafficName, numToRs, serversPerToR);
 
         RDC nonBlocking = new RDC(numToRs, serversPerToR, 1);
         static_rdc.PrintGraphforMCFFairCondensedAverage(filename+".static.lp", trafficPattern);
         nonBlocking.PrintGraphforMCFFairCondensedAverage(filename+".nonBlck.lp", trafficPattern);
 
-        static_rdc.PrintGraphforMCFFairCondensedAverage(filename+".rdc.lp", convertedTP);
+        rdc.PrintGraphforMCFFairCondensedAverage(filename+".rdc.lp", convertedTP);
 
     }
 
-    public static ArrayList<TrafficPair> convertedTraffic(ArrayList<TrafficPair>original, String trafficName)throws IOException {
+    public static ArrayList<TrafficPair> convertedTraffic(ArrayList<TrafficPair>original, String trafficName, int numRacks, int serversPerRack)throws IOException {
         ArrayList<TrafficPair> convertedTP = new ArrayList<>();
         Date date = Calendar.getInstance().getTime();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -77,7 +76,9 @@ public class TestRunAvg_rdc {
                 "python",
                 "metis.py",
                 filename,
-                "16"
+                String.valueOf(numRacks),
+                String.valueOf(numRacks*serversPerRack)
+
         };
         try {
             Process ps = Runtime.getRuntime().exec(cmd);
